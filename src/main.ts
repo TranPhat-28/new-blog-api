@@ -22,8 +22,7 @@ async function bootstrap() {
     host: configService.get<string>('POSTGRES_HOST'),
     port: Number(configService.get<number>('POSTGRES_PORT')),
     debug: configService.get<string>('NODE_ENV') !== 'production',
-    entities: ['dist/**/*.entity.js'],
-    entitiesTs: ['src/**/*.entity.ts'],
+    autoLoadEntities: true,
     driverOptions: {
       connection: {
         ssl: {
