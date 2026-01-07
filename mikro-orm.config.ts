@@ -4,11 +4,12 @@ import { Migrator } from '@mikro-orm/migrations';
 import * as fs from 'fs';
 import { join } from 'path';
 import * as dotenv from 'dotenv';
+import { SeedManager } from '@mikro-orm/seeder';
 
 dotenv.config();
 
 export default defineConfig({
-  extensions: [Migrator],
+  extensions: [Migrator, SeedManager],
   driver: PostgreSqlDriver,
   dbName: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
@@ -20,6 +21,11 @@ export default defineConfig({
 
   entities: ['dist/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
+
+  seeder: {
+    path: 'dist/database/seeders',
+    pathTs: 'src/database/seeders',
+  },
 
   driverOptions: {
     connection: {
