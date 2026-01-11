@@ -7,6 +7,10 @@ export class PostService {
   constructor(private readonly em: EntityManager) {}
 
   async findAll(): Promise<Post[]> {
-    return this.em.find(Post, {});
+    return await this.em.find(Post, {});
+  }
+
+  async findById(id: string): Promise<Post> {
+    return await this.em.findOneOrFail(Post, { id });
   }
 }
