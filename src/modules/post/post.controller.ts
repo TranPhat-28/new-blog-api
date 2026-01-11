@@ -5,6 +5,7 @@ import {
   Post as HttpPost,
   Body,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post } from './post.entity';
@@ -36,5 +37,10 @@ export class PostController {
     @Body() dto: UpdatePostDto,
   ): Promise<Post> {
     return this.postService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    return this.postService.delete(id);
   }
 }

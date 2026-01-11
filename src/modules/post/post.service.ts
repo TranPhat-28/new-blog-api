@@ -31,4 +31,9 @@ export class PostService {
     await this.em.flush();
     return post;
   }
+
+  async delete(id: string): Promise<void> {
+    const post = await this.em.findOneOrFail(Post, { id });
+    await this.em.remove(post).flush();
+  }
 }
