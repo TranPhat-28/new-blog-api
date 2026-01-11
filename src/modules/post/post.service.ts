@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Post } from './post.entity';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostService {
@@ -12,5 +13,13 @@ export class PostService {
 
   async findById(id: string): Promise<Post> {
     return await this.em.findOneOrFail(Post, { id });
+  }
+
+  async create(dto: CreatePostDto): Promise<Post> {
+    const post = new Post();
+    post.title = dto.title;
+    post.content = dto.content;
+    await this.em.persist(post).flush();
+    return post;
   }
 }
