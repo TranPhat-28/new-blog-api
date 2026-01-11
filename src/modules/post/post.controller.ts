@@ -1,10 +1,14 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { PostService } from './post.service';
+import { Post } from '../../entities/post.entity';
 
 @Controller('api/v1/posts')
 export class PostController {
+  constructor(private readonly postService: PostService) {}
+
   @Get()
-  findAll(): string {
-    return 'All posts';
+  async findAll(): Promise<Post[]> {
+    return this.postService.findAll();
   }
 
   @Get(':id')
