@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Post } from './post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
@@ -20,6 +21,14 @@ export class PostService {
     post.title = dto.title;
     post.content = dto.content;
     await this.em.persist(post).flush();
+    return post;
+  }
+
+  async update(id: string, dto: UpdatePostDto): Promise<Post> {
+    const post = await this.em.findOneOrFail(Post, { id });
+    post.title = dto.title;
+    post.content = dto.content;
+    await this.em.flush();
     return post;
   }
 }
