@@ -3,6 +3,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { Post } from './post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PatchPostDto } from './dto/patch-post.dto';
 
 @Injectable()
 export class PostService {
@@ -35,5 +36,17 @@ export class PostService {
   async delete(id: string): Promise<void> {
     const post = await this.em.findOneOrFail(Post, { id });
     await this.em.remove(post).flush();
+  }
+
+  async patch(id: string, dto: PatchPostDto): Promise<Post> {
+    const post = await this.em.findOneOrFail(Post, { id });
+    if (dto.title !== undefined) {
+      post.title = dto.title;
+    }
+    if (dto.content !== undefined) {
+      post.content = dto.content;
+    }
+    await this.em.flush();
+    return post;
   }
 }

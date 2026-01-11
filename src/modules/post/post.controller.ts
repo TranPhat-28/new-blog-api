@@ -6,11 +6,13 @@ import {
   Body,
   Put,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { Post } from './post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PatchPostDto } from './dto/patch-post.dto';
 
 @Controller('api/v1/posts')
 export class PostController {
@@ -42,5 +44,13 @@ export class PostController {
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
     return this.postService.delete(id);
+  }
+
+  @Patch(':id')
+  async patch(
+    @Param('id') id: string,
+    @Body() dto: PatchPostDto,
+  ): Promise<Post> {
+    return this.postService.patch(id, dto);
   }
 }
