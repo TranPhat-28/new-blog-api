@@ -14,7 +14,11 @@ export class PostService {
     }
 
     async findById(id: string): Promise<Post> {
-        return await this.em.findOneOrFail(Post, { id });
+        return await this.em.findOneOrFail(
+            Post,
+            { id },
+            { populate: ['comments'] },
+        );
     }
 
     async create(dto: CreatePostDto): Promise<Post> {

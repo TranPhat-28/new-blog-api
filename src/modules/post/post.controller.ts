@@ -23,6 +23,7 @@ export class PostController {
         return this.postService.findAll();
     }
 
+    /* Find post by ID and include comments */
     @Get(':id')
     async findById(@Param('id') id: string): Promise<Post> {
         return this.postService.findById(id);

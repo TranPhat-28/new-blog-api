@@ -1,4 +1,11 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+    Entity,
+    PrimaryKey,
+    Property,
+    OneToMany,
+    Collection,
+} from '@mikro-orm/core';
+import { Comment } from '../comment/comment.entity';
 
 @Entity()
 export class Post {
@@ -10,6 +17,9 @@ export class Post {
 
     @Property({ type: 'text' })
     content!: string;
+
+    @OneToMany(() => Comment, (comment) => comment.post)
+    comments = new Collection<Comment>(this);
 
     @Property()
     createdAt: Date = new Date();
