@@ -6,11 +6,11 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import mikroOrmConfig from '../mikro-orm.config';
 
 @Module({
-  imports: [
-    MikroOrmModule.forRoot(mikroOrmConfig),
-    ConfigModule.forRoot({ isGlobal: true }),
-    PostModule,
-    CommentModule,
-  ],
+    imports: [
+        MikroOrmModule.forRoot(mikroOrmConfig),
+        ConfigModule.forRoot({ isGlobal: true }),
+        PostModule,
+        CommentModule,
+    ],
 })
 export class AppModule {}

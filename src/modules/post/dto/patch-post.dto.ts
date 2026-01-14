@@ -1,4 +1,4 @@
 export class PatchPostDto {
-  title?: string;
-  content?: string;
+    title?: string;
+    content?: string;
 }

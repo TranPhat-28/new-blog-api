@@ -5,13 +5,13 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Controller('api/v1')
 export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+    constructor(private readonly commentService: CommentService) {}
 
-  @Post('posts/:postId/comments')
-  async create(
-    @Param('postId') postId: string,
-    @Body() dto: CreateCommentDto,
-  ): Promise<Comment> {
-    return this.commentService.create(postId, dto);
-  }
+    @Post('posts/:postId/comments')
+    async create(
+        @Param('postId') postId: string,
+        @Body() dto: CreateCommentDto,
+    ): Promise<Comment> {
+        return this.commentService.create(postId, dto);
+    }
 }

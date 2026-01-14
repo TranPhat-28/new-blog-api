@@ -9,40 +9,46 @@ import { SeedManager } from '@mikro-orm/seeder';
 dotenv.config();
 
 export default defineConfig({
-  extensions: [Migrator, SeedManager],
-  driver: PostgreSqlDriver,
-  dbName: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  host: process.env.POSTGRES_HOST,
-  port: Number(process.env.POSTGRES_PORT),
+    extensions: [Migrator, SeedManager],
+    driver: PostgreSqlDriver,
+    dbName: process.env.POSTGRES_DB,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    host: process.env.POSTGRES_HOST,
+    port: Number(process.env.POSTGRES_PORT),
 
-  debug: process.env.NODE_ENV !== 'production',
+    debug: process.env.NODE_ENV !== 'production',
 
-  entities: ['dist/**/*.entity.js'],
-  entitiesTs: ['src/**/*.entity.ts'],
+    entities: ['dist/**/*.entity.js'],
+    entitiesTs: ['src/**/*.entity.ts'],
 
-  seeder: {
-    path: 'dist/database/seeders',
-    pathTs: 'src/database/seeders',
-  },
-
-  driverOptions: {
-    connection: {
-      ssl: process.env.DB_SSL_CA
-        ? {
-            rejectUnauthorized: true,
-            ca: fs
-              .readFileSync(join(process.cwd(), 'certs', process.env.DB_SSL_CA))
-              .toString(),
-          }
-        : undefined,
+    seeder: {
+        path: 'dist/database/seeders',
+        pathTs: 'src/database/seeders',
     },
-  },
 
-  migrations: {
-    path: 'dist/migrations',
-    pathTs: 'src/migrations',
-    glob: '!(*.d).{js,ts}',
-  },
+    driverOptions: {
+        connection: {
+            ssl: process.env.DB_SSL_CA
+                ? {
+                      rejectUnauthorized: true,
+                      ca: fs
+                          .readFileSync(
+                              join(
+                                  process.cwd(),
+                                  'certs',
+                                  process.env.DB_SSL_CA,
+                              ),
+                          )
+                          .toString(),
+                  }
+                : undefined,
+        },
+    },
+
+    migrations: {
+        path: 'dist/migrations',
+        pathTs: 'src/migrations',
+        glob: '!(*.d).{js,ts}',
+    },
 });

@@ -6,15 +6,15 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly em: EntityManager) {}
+    constructor(private readonly em: EntityManager) {}
 
-  async create(postId: string, dto: CreateCommentDto): Promise<Comment> {
-    const comment = new Comment();
-    comment.content = dto.content;
+    async create(postId: string, dto: CreateCommentDto): Promise<Comment> {
+        const comment = new Comment();
+        comment.content = dto.content;
 
-    const post = await this.em.findOneOrFail(Post, { id: postId });
-    comment.post = post;
-    await this.em.persist(comment).flush();
-    return comment;
-  }
+        const post = await this.em.findOneOrFail(Post, { id: postId });
+        comment.post = post;
+        await this.em.persist(comment).flush();
+        return comment;
+    }
 }
