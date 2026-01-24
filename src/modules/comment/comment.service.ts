@@ -28,4 +28,14 @@ export class CommentService {
             updatedAt: comment.updatedAt,
         }));
     }
+
+    async findById(id: string): Promise<CommentDto> {
+        const comment = await this.em.findOneOrFail(Comment, { id });
+        return {
+            id: comment.id,
+            content: comment.content,
+            createdAt: comment.createdAt,
+            updatedAt: comment.updatedAt,
+        };
+    }
 }

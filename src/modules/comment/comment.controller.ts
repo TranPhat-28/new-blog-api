@@ -13,6 +13,11 @@ export class CommentController {
         return this.commentService.findByPostId(postId);
     }
 
+    @Get('comments/:id')
+    async findById(@Param('id') id: string): Promise<CommentDto> {
+        return this.commentService.findById(id);
+    }
+
     @Post('posts/:postId/comments')
     async create(
         @Param('postId') postId: string,
