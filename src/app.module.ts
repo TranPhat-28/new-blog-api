@@ -4,9 +4,14 @@ import { PostModule } from './modules/post/post.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import mikroOrmConfig from '../mikro-orm.config';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
     imports: [
+        AutomapperModule.forRoot({
+            strategyInitializer: classes(),
+        }),
         MikroOrmModule.forRoot(mikroOrmConfig),
         ConfigModule.forRoot({ isGlobal: true }),
         PostModule,
