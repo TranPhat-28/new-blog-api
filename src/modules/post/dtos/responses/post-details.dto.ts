@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { CommentDto } from '../../../comment/dto/comment.dto';
+import { CommentDto } from '../../../comment/dtos/comment.dto';
 
 export class PostDetailsDto {
     @AutoMap()
