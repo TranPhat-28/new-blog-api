@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
 import { Post } from './post.entity';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { PatchPostDto } from './dto/patch-post.dto';
+import { CreatePostDto } from './dtos/requests/create-post.dto';
+import { UpdatePostDto } from './dtos/requests/update-post.dto';
+import { PatchPostDto } from './dtos/requests/patch-post.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 
 @Injectable()
 export class PostService {
-    constructor(private readonly em: EntityManager) {}
+    constructor(
+        private readonly em: EntityManager,
+        @InjectMapper() private readonly mapper: Mapper,
+    ) {}
 
-    async findAll(): Promise<Post[]> {
-        return await this.em.find(Post, {});
+    async findAll(): Promise<PostSummaryDto[]> {
+        const posts = await this.em.find(Post, {});
+        return this.mapper.mapArray(posts, Post, PostSummaryDto);
     }
 
     async findById(id: string): Promise<Post> {

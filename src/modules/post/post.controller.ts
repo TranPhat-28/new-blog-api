@@ -21,8 +21,9 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Get()
-    async findAll(): Promise<Post[]> {
-        return this.postService.findAll();
+    async findAll(): Promise<PostSummaryDto[]> {
+        const posts = await this.postService.findAll();
+        return posts;
     }
 
     /* Find post by ID and include comments */
