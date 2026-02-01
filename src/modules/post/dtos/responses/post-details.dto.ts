@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { CommentDto } from '../../../comment/dtos/comment.dto';
+import { CommentDetailsDto } from '../../../comment/dtos/responses/comment-details.dto';
 
 export class PostDetailsDto {
     @AutoMap()
@@ -11,8 +11,8 @@ export class PostDetailsDto {
     @AutoMap()
     content!: string;
 
-    @AutoMap(() => [CommentDto])
-    comments: CommentDto[] = [];
+    @AutoMap(() => [CommentDetailsDto])
+    comments: CommentDetailsDto[] = [];
 
     @AutoMap()
     createdAt: Date = new Date();

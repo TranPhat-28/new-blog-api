@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
-import { CommentService } from './comment.service';
-import { Comment } from './comment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentDto } from './dto/comment.dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CommentService } from './comment.service';
+import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
+import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 
 @ApiTags('Comment')
 @Controller('api/v1')
@@ -11,20 +10,22 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Get('posts/:postId/comments')
-    async findByPostId(@Param('postId') postId: string): Promise<CommentDto[]> {
+    async findByPostId(
+        @Param('postId') postId: string,
+    ): Promise<CommentDetailsDto[]> {
         return this.commentService.findByPostId(postId);
     }
 
     @Get('comments/:id')
-    async findById(@Param('id') id: string): Promise<CommentDto> {
-        return this.commentService.findById(id);
+    async findById(@Param('id') id: string): Promise<CommentDetailsDto> {
+        return await this.commentService.findById(id);
     }
 
     @Post('posts/:postId/comments')
     async create(
         @Param('postId') postId: string,
         @Body() dto: CreateCommentDto,
-    ): Promise<Comment> {
-        return this.commentService.create(postId, dto);
+    ): Promise<CommentDetailsDto> {
+        return await this.commentService.create(postId, dto);
     }
 }

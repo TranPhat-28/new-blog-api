@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
-export class CommentDto {
+export class CommentDetailsDto {
     @AutoMap()
     id!: string;
 

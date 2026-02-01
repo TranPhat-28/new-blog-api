@@ -1,41 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { EntityManager } from '@mikro-orm/core';
-import { Comment } from './comment.entity';
+import { Injectable } from '@nestjs/common';
 import { Post } from '../post/post.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentDto } from './dto/comment.dto';
+import { Comment } from './comment.entity';
+import { CreateCommentDto } from './dtos/requests/create-comment.dto';
+import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 
 @Injectable()
 export class CommentService {
-    constructor(private readonly em: EntityManager) {}
+    constructor(
+        private readonly em: EntityManager,
+        @InjectMapper() private readonly mapper: Mapper,
+    ) {}
 
-    async create(postId: string, dto: CreateCommentDto): Promise<Comment> {
-        const comment = new Comment();
-        comment.content = dto.content;
+    async create(
+        postId: string,
+        dto: CreateCommentDto,
+    ): Promise<CommentDetailsDto> {
+        const comment = this.mapper.map(dto, CreateCommentDto, Comment);
 
         const post = await this.em.findOneOrFail(Post, { id: postId });
         comment.post = post;
+
         await this.em.persist(comment).flush();
-        return comment;
+
+        return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
 
-    async findByPostId(postId: string): Promise<CommentDto[]> {
+    async findByPostId(postId: string): Promise<CommentDetailsDto[]> {
         const comments = await this.em.find(Comment, { post: postId });
-        return comments.map((comment) => ({
-            id: comment.id,
-            content: comment.content,
-            createdAt: comment.createdAt,
-            updatedAt: comment.updatedAt,
-        }));
+
+        return this.mapper.mapArray(comments, Comment, CommentDetailsDto);
     }
 
-    async findById(id: string): Promise<CommentDto> {
+    async findById(id: string): Promise<CommentDetailsDto> {
         const comment = await this.em.findOneOrFail(Comment, { id });
-        return {
-            id: comment.id,
-            content: comment.content,
-            createdAt: comment.createdAt,
-            updatedAt: comment.updatedAt,
-        };
+
+        return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
 }
