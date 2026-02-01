@@ -6,6 +6,7 @@ import { CommentDto } from '../comment/dto/comment.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { Post } from './post.entity';
+import { CreatePostDto } from './dtos/requests/create-post.dto';
 
 @Injectable()
 export class PostProfile extends AutomapperProfile {
@@ -17,6 +18,7 @@ export class PostProfile extends AutomapperProfile {
         return (mapper: Mapper) => {
             createMap(mapper, Comment, CommentDto);
 
+            /* Entity to Response DTOs */
             createMap(
                 mapper,
                 Post,
@@ -28,6 +30,9 @@ export class PostProfile extends AutomapperProfile {
             );
 
             createMap(mapper, Post, PostSummaryDto);
+
+            /* Request DTOs to Entity */
+            createMap(mapper, CreatePostDto, Post);
         };
     }
 }

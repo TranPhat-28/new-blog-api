@@ -1,19 +1,20 @@
 import {
-    Controller,
-    Get,
-    Param,
-    Post as HttpPost,
     Body,
-    Put,
+    Controller,
     Delete,
+    Get,
+    Post as HttpPost,
+    Param,
     Patch,
+    Put,
 } from '@nestjs/common';
-import { PostService } from './post.service';
-import { Post } from './post.entity';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { PatchPostDto } from './dto/patch-post.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreatePostDto } from './dtos/requests/create-post.dto';
+import { PatchPostDto } from './dtos/requests/patch-post.dto';
+import { UpdatePostDto } from './dtos/requests/update-post.dto';
+import { PostSummaryDto } from './dtos/responses/post-summary.dto';
+import { PostService } from './post.service';
+import { PostDetailsDto } from './dtos/responses/post-details.dto';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -28,21 +29,21 @@ export class PostController {
 
     /* Find post by ID and include comments */
     @Get(':id')
-    async findById(@Param('id') id: string): Promise<Post> {
-        return this.postService.findById(id);
+    async findById(@Param('id') id: string): Promise<PostDetailsDto> {
+        return await this.postService.findById(id);
     }
 
     @HttpPost()
-    async create(@Body() dto: CreatePostDto): Promise<Post> {
-        return this.postService.create(dto);
+    async create(@Body() dto: CreatePostDto): Promise<PostSummaryDto> {
+        return await this.postService.create(dto);
     }
 
     @Put(':id')
     async update(
         @Param('id') id: string,
         @Body() dto: UpdatePostDto,
-    ): Promise<Post> {
-        return this.postService.update(id, dto);
+    ): Promise<PostSummaryDto> {
+        return await this.postService.update(id, dto);
     }
 
     @Delete(':id')
@@ -54,7 +55,7 @@ export class PostController {
     async patch(
         @Param('id') id: string,
         @Body() dto: PatchPostDto,
-    ): Promise<Post> {
-        return this.postService.patch(id, dto);
+    ): Promise<PostSummaryDto> {
+        return await this.postService.patch(id, dto);
     }
 }

@@ -7,6 +7,7 @@ import { PatchPostDto } from './dtos/requests/patch-post.dto';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
+import { PostDetailsDto } from './dtos/responses/post-details.dto';
 
 @Injectable()
 export class PostService {
@@ -17,47 +18,58 @@ export class PostService {
 
     async findAll(): Promise<PostSummaryDto[]> {
         const posts = await this.em.find(Post, {});
+
         return this.mapper.mapArray(posts, Post, PostSummaryDto);
     }
 
-    async findById(id: string): Promise<Post> {
-        return await this.em.findOneOrFail(
+    /* Find post by ID and include comments */
+    async findById(id: string): Promise<PostDetailsDto> {
+        const post = await this.em.findOneOrFail(
             Post,
             { id },
             { populate: ['comments'] },
         );
+
+        return this.mapper.map(post, Post, PostDetailsDto);
     }
 
-    async create(dto: CreatePostDto): Promise<Post> {
-        const post = new Post();
-        post.title = dto.title;
-        post.content = dto.content;
+    async create(dto: CreatePostDto): Promise<PostSummaryDto> {
+        const post = this.mapper.map(dto, CreatePostDto, Post);
+
         await this.em.persist(post).flush();
-        return post;
+
+        return this.mapper.map(post, Post, PostSummaryDto);
     }
 
-    async update(id: string, dto: UpdatePostDto): Promise<Post> {
+    async update(id: string, dto: UpdatePostDto): Promise<PostSummaryDto> {
         const post = await this.em.findOneOrFail(Post, { id });
+
         post.title = dto.title;
         post.content = dto.content;
+
         await this.em.flush();
-        return post;
+
+        return this.mapper.map(post, Post, PostSummaryDto);
     }
 
     async delete(id: string): Promise<void> {
         const post = await this.em.findOneOrFail(Post, { id });
+
         await this.em.remove(post).flush();
     }
 
-    async patch(id: string, dto: PatchPostDto): Promise<Post> {
+    async patch(id: string, dto: PatchPostDto): Promise<PostSummaryDto> {
         const post = await this.em.findOneOrFail(Post, { id });
+
         if (dto.title !== undefined) {
             post.title = dto.title;
         }
         if (dto.content !== undefined) {
             post.content = dto.content;
         }
+
         await this.em.flush();
-        return post;
+
+        return this.mapper.map(post, Post, PostSummaryDto);
     }
 }
