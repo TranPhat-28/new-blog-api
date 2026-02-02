@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
@@ -36,5 +44,10 @@ export class CommentController {
         @Body() dto: UpdateCommentDto,
     ): Promise<CommentDetailsDto> {
         return await this.commentService.update(id, dto);
+    }
+
+    @Delete('comments/:id')
+    async delete(@Param('id') id: string): Promise<void> {
+        return this.commentService.delete(id);
     }
 }

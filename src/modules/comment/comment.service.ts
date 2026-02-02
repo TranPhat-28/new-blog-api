@@ -53,4 +53,10 @@ export class CommentService {
 
         return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
+
+    async delete(id: string): Promise<void> {
+        const comment = await this.em.findOneOrFail(Comment, { id });
+
+        await this.em.remove(comment).flush();
+    }
 }
