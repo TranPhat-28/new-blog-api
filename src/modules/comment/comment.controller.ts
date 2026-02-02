@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
+import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
 
 @ApiTags('Comment')
 @Controller('api/v1')
@@ -27,5 +28,13 @@ export class CommentController {
         @Body() dto: CreateCommentDto,
     ): Promise<CommentDetailsDto> {
         return await this.commentService.create(postId, dto);
+    }
+
+    @Put('comments/:id')
+    async update(
+        @Param('id') id: string,
+        @Body() dto: UpdateCommentDto,
+    ): Promise<CommentDetailsDto> {
+        return await this.commentService.update(id, dto);
     }
 }

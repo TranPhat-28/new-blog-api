@@ -6,6 +6,7 @@ import { Post } from '../post/post.entity';
 import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
+import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
 
 @Injectable()
 export class CommentService {
@@ -36,6 +37,19 @@ export class CommentService {
 
     async findById(id: string): Promise<CommentDetailsDto> {
         const comment = await this.em.findOneOrFail(Comment, { id });
+
+        return this.mapper.map(comment, Comment, CommentDetailsDto);
+    }
+
+    async update(
+        id: string,
+        dto: UpdateCommentDto,
+    ): Promise<CommentDetailsDto> {
+        const comment = await this.em.findOneOrFail(Comment, { id });
+
+        comment.content = dto.content;
+
+        await this.em.flush();
 
         return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
