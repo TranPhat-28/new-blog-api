@@ -37,4 +37,10 @@ export class TagService {
 
         return this.mapper.map(tag, Tag, TagDetailsDto);
     }
+
+    async delete(id: string): Promise<void> {
+        const tag = await this.em.findOneOrFail(Tag, { id });
+
+        await this.em.remove(tag).flush();
+    }
 }
