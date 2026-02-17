@@ -32,15 +32,26 @@ export default defineConfig({
             ssl: process.env.DB_SSL_CA
                 ? {
                       rejectUnauthorized: true,
-                      ca: fs
-                          .readFileSync(
-                              join(
-                                  process.cwd(),
-                                  'certs',
-                                  process.env.DB_SSL_CA,
-                              ),
-                          )
-                          .toString(),
+                      ca: (() => {
+                          // Local development
+                          const localPath = join(
+                              process.cwd(),
+                              'certs',
+                              process.env.DB_SSL_CA,
+                          );
+
+                          // Staging on Render
+                          const stagingPath = join(
+                              '/etc/secrets',
+                              process.env.DB_SSL_CA,
+                          );
+
+                          const certPath = fs.existsSync(localPath)
+                              ? localPath
+                              : stagingPath;
+
+                          return fs.readFileSync(certPath).toString();
+                      })(),
                   }
                 : undefined,
         },
