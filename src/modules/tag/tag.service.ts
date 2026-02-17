@@ -19,6 +19,12 @@ export class TagService {
         return this.mapper.map(tag, Tag, TagDetailsDto);
     }
 
+    async findAll(): Promise<TagDetailsDto[]> {
+        const tags = await this.em.find(Tag, {});
+
+        return this.mapper.mapArray(tags, Tag, TagDetailsDto);
+    }
+
     async create(dto: CreateTagDto): Promise<TagDetailsDto> {
         const existingTag = await this.em.findOne(Tag, { name: dto.name });
 

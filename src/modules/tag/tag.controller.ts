@@ -14,6 +14,11 @@ export class TagController {
         return await this.tagService.findById(id);
     }
 
+    @Get('tags')
+    async findAll(): Promise<TagDetailsDto[]> {
+        return await this.tagService.findAll();
+    }
+
     @Post('tags')
     async create(@Body() dto: CreateTagDto): Promise<TagDetailsDto> {
         return await this.tagService.create(dto);
