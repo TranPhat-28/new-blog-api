@@ -12,9 +12,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/requests/create-post.dto';
 import { PatchPostDto } from './dtos/requests/patch-post.dto';
 import { UpdatePostDto } from './dtos/requests/update-post.dto';
+import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { PostService } from './post.service';
-import { PostDetailsDto } from './dtos/responses/post-details.dto';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -57,5 +57,23 @@ export class PostController {
         @Body() dto: PatchPostDto,
     ): Promise<PostSummaryDto> {
         return await this.postService.patch(id, dto);
+    }
+
+    // Attach a tag to a post
+    @HttpPost(':postId/tags/:tagId')
+    async attachTag(
+        @Param('postId') postId: string,
+        @Param('tagId') tagId: string,
+    ): Promise<PostDetailsDto> {
+        return await this.postService.attachTag(postId, tagId);
+    }
+
+    // Remove a tag from a post
+    @Delete(':postId/tags/:tagId')
+    async detachTag(
+        @Param('postId') postId: string,
+        @Param('tagId') tagId: string,
+    ): Promise<PostDetailsDto> {
+        return await this.postService.detachTag(postId, tagId);
     }
 }

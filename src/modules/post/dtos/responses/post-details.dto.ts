@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { TagSummaryDto } from 'src/modules/tag/dtos/responses/tag-summary.dto';
 import { CommentDetailsDto } from '../../../comment/dtos/responses/comment-details.dto';
 
 export class PostDetailsDto {
@@ -13,6 +14,9 @@ export class PostDetailsDto {
 
     @AutoMap(() => [CommentDetailsDto])
     comments: CommentDetailsDto[] = [];
+
+    @AutoMap(() => [TagSummaryDto])
+    tags: TagSummaryDto[] = [];
 
     @AutoMap()
     createdAt: Date = new Date();

@@ -1,13 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/core';
-import { Post } from './post.entity';
-import { CreatePostDto } from './dtos/requests/create-post.dto';
-import { UpdatePostDto } from './dtos/requests/update-post.dto';
-import { PatchPostDto } from './dtos/requests/patch-post.dto';
-import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { PostSummaryDto } from './dtos/responses/post-summary.dto';
+import { InjectMapper } from '@automapper/nestjs';
+import { EntityManager } from '@mikro-orm/core';
+import { Injectable } from '@nestjs/common';
+import { Comment } from '../comment/comment.entity';
+import { CommentDetailsDto } from '../comment/dtos/responses/comment-details.dto';
+import { TagSummaryDto } from '../tag/dtos/responses/tag-summary.dto';
+import { Tag } from '../tag/tag.entity';
+import { CreatePostDto } from './dtos/requests/create-post.dto';
+import { PatchPostDto } from './dtos/requests/patch-post.dto';
+import { UpdatePostDto } from './dtos/requests/update-post.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
+import { PostSummaryDto } from './dtos/responses/post-summary.dto';
+import { Post } from './post.entity';
 
 @Injectable()
 export class PostService {
@@ -22,15 +26,31 @@ export class PostService {
         return this.mapper.mapArray(posts, Post, PostSummaryDto);
     }
 
-    /* Find post by ID and include comments */
+    /* Find post by ID and include comments and tags */
     async findById(id: string): Promise<PostDetailsDto> {
         const post = await this.em.findOneOrFail(
             Post,
             { id },
-            { populate: ['comments'] },
+            { populate: ['comments', 'tags'] },
         );
 
-        return this.mapper.map(post, Post, PostDetailsDto);
+        const result = this.mapper.map(post, Post, PostDetailsDto);
+
+        // Map Comments
+        result.comments = this.mapper.mapArray(
+            post.comments.getItems(),
+            Comment,
+            CommentDetailsDto,
+        );
+
+        // Map Tags
+        result.tags = this.mapper.mapArray(
+            post.tags.getItems(),
+            Tag,
+            TagSummaryDto,
+        );
+
+        return result;
     }
 
     async create(dto: CreatePostDto): Promise<PostSummaryDto> {
@@ -71,5 +91,42 @@ export class PostService {
         await this.em.flush();
 
         return this.mapper.map(post, Post, PostSummaryDto);
+    }
+
+    async attachTag(postId: string, tagId: string): Promise<PostDetailsDto> {
+        const post = await this.em.findOneOrFail(
+            Post,
+            { id: postId },
+            { populate: ['tags'] },
+        );
+
+        const tag = await this.em.findOneOrFail(Tag, { id: tagId });
+
+        // avoid duplicate relation
+        if (!post.tags.contains(tag)) {
+            post.tags.add(tag);
+            await this.em.flush();
+        }
+
+        // load latest changes for response
+        return await this.findById(postId);
+    }
+
+    async detachTag(postId: string, tagId: string): Promise<PostDetailsDto> {
+        const post = await this.em.findOneOrFail(
+            Post,
+            { id: postId },
+            { populate: ['tags'] },
+        );
+
+        const tag = await this.em.findOneOrFail(Tag, { id: tagId });
+
+        if (post.tags.contains(tag)) {
+            post.tags.remove(tag);
+            await this.em.flush();
+        }
+
+        // load latest changes for response
+        return await this.findById(postId);
     }
 }
