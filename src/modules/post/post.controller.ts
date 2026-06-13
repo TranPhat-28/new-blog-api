@@ -7,14 +7,16 @@ import {
     Param,
     Patch,
     Put,
+    Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/requests/create-post.dto';
 import { PatchPostDto } from './dtos/requests/patch-post.dto';
 import { UpdatePostDto } from './dtos/requests/update-post.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { PostService } from './post.service';
+import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -22,8 +24,20 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Get()
-    async findAll(): Promise<PostSummaryDto[]> {
-        const posts = await this.postService.findAll();
+    @ApiQuery({
+        name: 'page',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        type: Number,
+    })
+    async findAll(
+        @Query() query: PaginationQueryDto,
+    ): Promise<PostSummaryDto[]> {
+        const posts = await this.postService.findAll(query);
         return posts;
     }
 

@@ -12,6 +12,7 @@ import { UpdatePostDto } from './dtos/requests/update-post.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { Post } from './post.entity';
+import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
 
 @Injectable()
 export class PostService {
@@ -20,8 +21,12 @@ export class PostService {
         @InjectMapper() private readonly mapper: Mapper,
     ) {}
 
-    async findAll(): Promise<PostSummaryDto[]> {
-        const posts = await this.em.find(Post, {});
+    async findAll(query: PaginationQueryDto): Promise<PostSummaryDto[]> {
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 10;
+        const offset = (page - 1) * limit;
+
+        const posts = await this.em.find(Post, {}, { limit, offset });
 
         return this.mapper.mapArray(posts, Post, PostSummaryDto);
     }
