@@ -1,8 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Query,
+} from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TagService } from './tag.service';
 import { TagDetailsDto } from './dtos/responses/tag-details.dto';
 import { CreateTagDto } from './dtos/requests/create-tag.dto';
+import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
 
 @ApiTags('Tag')
 @Controller('api/v1')
@@ -15,8 +24,20 @@ export class TagController {
     }
 
     @Get('tags')
-    async findAll(): Promise<TagDetailsDto[]> {
-        return await this.tagService.findAll();
+    @ApiQuery({
+        name: 'page',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        type: Number,
+    })
+    async findAll(
+        @Query() query: PaginationQueryDto,
+    ): Promise<TagDetailsDto[]> {
+        return await this.tagService.findAll(query);
     }
 
     @Post('tags')
