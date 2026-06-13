@@ -6,12 +6,14 @@ import {
     Param,
     Post,
     Put,
+    Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
+import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
 
 @ApiTags('Comment')
 @Controller('api/v1')
@@ -19,10 +21,21 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Get('posts/:postId/comments')
+    @ApiQuery({
+        name: 'page',
+        required: false,
+        type: Number,
+    })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        type: Number,
+    })
     async findByPostId(
         @Param('postId') postId: string,
+        @Query() query: PaginationQueryDto,
     ): Promise<CommentDetailsDto[]> {
-        return this.commentService.findByPostId(postId);
+        return this.commentService.findByPostId(postId, query);
     }
 
     @Get('comments/:id')
