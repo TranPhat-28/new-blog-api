@@ -39,6 +39,11 @@ export class PostController {
         required: false,
         type: String,
     })
+    @ApiQuery({
+        name: 'sortBy',
+        required: false,
+        enum: ['createdAt', 'title'],
+    })
     async findAll(@Query() query: PostQueryDto): Promise<PostSummaryDto[]> {
         const posts = await this.postService.findAll(query);
         return posts;

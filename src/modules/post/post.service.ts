@@ -33,7 +33,7 @@ export class PostService {
                 limit,
                 offset,
                 orderBy: {
-                    createdAt: query.order,
+                    [query.sortBy]: query.order,
                 },
             },
         );
