@@ -13,7 +13,7 @@ import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
-import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
+import { CommentQueryDto } from './dtos/requests/comment-query.dto';
 
 @ApiTags('Comment')
 @Controller('api/v1')
@@ -31,9 +31,14 @@ export class CommentController {
         required: false,
         type: Number,
     })
+    @ApiQuery({
+        name: 'order',
+        required: false,
+        type: String,
+    })
     async findByPostId(
         @Param('postId') postId: string,
-        @Query() query: PaginationQueryDto,
+        @Query() query: CommentQueryDto,
     ): Promise<CommentDetailsDto[]> {
         return this.commentService.findByPostId(postId, query);
     }

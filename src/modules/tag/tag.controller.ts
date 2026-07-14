@@ -11,7 +11,7 @@ import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { TagService } from './tag.service';
 import { TagDetailsDto } from './dtos/responses/tag-details.dto';
 import { CreateTagDto } from './dtos/requests/create-tag.dto';
-import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
+import { TagQueryDto } from './dtos/requests/tag-query.dto';
 
 @ApiTags('Tag')
 @Controller('api/v1')
@@ -34,9 +34,12 @@ export class TagController {
         required: false,
         type: Number,
     })
-    async findAll(
-        @Query() query: PaginationQueryDto,
-    ): Promise<TagDetailsDto[]> {
+    @ApiQuery({
+        name: 'order',
+        required: false,
+        type: String,
+    })
+    async findAll(@Query() query: TagQueryDto): Promise<TagDetailsDto[]> {
         return await this.tagService.findAll(query);
     }
 

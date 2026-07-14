@@ -7,7 +7,7 @@ import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
-import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
+import { CommentQueryDto } from './dtos/requests/comment-query.dto';
 
 @Injectable()
 export class CommentService {
@@ -32,7 +32,7 @@ export class CommentService {
 
     async findByPostId(
         postId: string,
-        query: PaginationQueryDto,
+        query: CommentQueryDto,
     ): Promise<CommentDetailsDto[]> {
         const page = query.page ?? 1;
         const limit = query.limit ?? 10;
@@ -41,7 +41,13 @@ export class CommentService {
         const comments = await this.em.find(
             Comment,
             { post: postId },
-            { limit, offset },
+            {
+                limit,
+                offset,
+                orderBy: {
+                    createdAt: query.order,
+                },
+            },
         );
 
         return this.mapper.mapArray(comments, Comment, CommentDetailsDto);
