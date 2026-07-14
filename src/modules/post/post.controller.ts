@@ -16,7 +16,7 @@ import { UpdatePostDto } from './dtos/requests/update-post.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { PostService } from './post.service';
-import { PaginationQueryDto } from 'src/common/dtos/pagination-query.dto';
+import { PostQueryDto } from './dtos/requests/post-query.dto';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -34,9 +34,12 @@ export class PostController {
         required: false,
         type: Number,
     })
-    async findAll(
-        @Query() query: PaginationQueryDto,
-    ): Promise<PostSummaryDto[]> {
+    @ApiQuery({
+        name: 'order',
+        required: false,
+        type: String,
+    })
+    async findAll(@Query() query: PostQueryDto): Promise<PostSummaryDto[]> {
         const posts = await this.postService.findAll(query);
         return posts;
     }
