@@ -1,98 +1,307 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# New Blog API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 1. Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A RESTful blog API built with NestJS, MikroORM, and PostgreSQL.
 
-## Description
+This project provides a simple blog platform API with three main resources:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Posts
+- Comments
+- Tags
 
-## Project setup
+## 2. Tech Stack
 
-```bash
-$ npm install
+| Technology        | Purpose                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| NestJS            | Main application framework for building the REST API            |
+| TypeScript        | Strongly typed application code                                 |
+| MikroORM          | ORM for entities, repositories, migrations, and database access |
+| PostgreSQL        | Primary relational database                                     |
+| Swagger / OpenAPI | API documentation and interactive exploration                   |
+| class-validator   | Request DTO validation                                          |
+| class-transformer | Query parameter and payload transformation                      |
+| AutoMapper        | Mapping between entities and DTOs                               |
+| Faker             | Generating realistic fake data for seeding                      |
+| dotenv            | Loading environment variables                                   |
+| Jest / Supertest  | Testing support                                                 |
+| ESLint / Prettier | Code quality and formatting                                     |
+
+## 3. Project Structure
+
+```text
+src/
+├── app.module.ts
+├── main.ts
+├── common/
+│   ├── dtos/
+│   │   └── pagination-query.dto.ts
+│   └── filters/
+│       └── all-exceptions.filter.ts
+├── database/
+│   ├── factories/
+│   │   ├── CommentFactory.ts
+│   │   └── PostFactory.ts
+│   └── seeders/
+│       └── PostSeeder.ts
+├── migrations/
+├── modules/
+│   ├── comment/
+│   ├── post/
+│   └── tag/
 ```
 
-## Compile and run the project
+### Module responsibilities
 
-```bash
-# development
-$ npm run start
+- Post module: manages posts, post-specific queries, tag attachment/detachment, and post response DTOs
+- Comment module: manages comments created under posts
+- Tag module: manages tags and their listing/creation/deletion
+- Common folder: reusable DTOs and globally used filters
+- Database folder: factories and seeders used to populate development data
+- Migrations folder: versioned database schema changes
 
-# watch mode
-$ npm run start:dev
+## 4. Architecture
 
-# production mode
-$ npm run start:prod
+The application follows a standard layered flow:
+
+```text
+Client → Controller → Service → MikroORM → Database
 ```
 
-## Run tests
+### Request flow
 
-```bash
-# unit tests
-$ npm run test
+1. The client sends an HTTP request to one of the API endpoints.
+2. The controller receives the request and passes it to the corresponding service.
+3. The service uses MikroORM to interact with the database.
+4. The resulting entity data is mapped into response DTOs before being returned to the client.
 
-# e2e tests
-$ npm run test:e2e
+### Main building blocks
 
-# test coverage
-$ npm run test:cov
+- Controllers: receive HTTP requests and delegate logic to services
+- Services: implement business logic and database operations
+- Entities: represent database tables and relationships
+- DTOs: define request and response payload shapes
+- AutoMapper: maps entities to DTOs and request DTOs to entities
+
+## 5. Database Design
+
+The API uses PostgreSQL with three main entities:
+
+- Post
+- Comment
+- Tag
+
+### Relationships
+
+- Post ↔ Comment: One-to-many
+    - One post can have many comments.
+    - Each comment belongs to a single post.
+    - The comment side is the owning side of the relation through the post reference.
+
+- Post ↔ Tag: Many-to-many
+    - A post can have many tags.
+    - A tag can be assigned to many posts.
+    - The owning side of the relation is defined on the Post entity through the tags collection.
+
+### Entity notes
+
+- Post entities contain title, content, timestamps, comments, and tags.
+- Comment entities contain content, a reference to their parent post, and timestamps.
+- Tag entities contain a unique name and timestamps.
+
+## 6. Implemented Features
+
+The repository currently implements the following features:
+
+- CRUD operations for Posts
+- CRUD operations for Comments
+- CRUD operations for Tags
+- One-to-many relationship between Posts and Comments
+- Many-to-many relationship between Posts and Tags
+- Database migrations
+- Database seeders and factories
+- AutoMapper integration for entity/DTO mapping
+- Separate request and response DTOs
+- Validation using class-validator
+- Global ValidationPipe
+- Global exception filter
+- Pagination support
+- Sorting support
+- Swagger/OpenAPI documentation
+
+## 7. API Endpoints
+
+Swagger documentation is available at:
+
+- http://localhost:3000/api
+
+### Posts
+
+| Method | Endpoint                          | Description                            |
+| ------ | --------------------------------- | -------------------------------------- |
+| GET    | /api/v1/posts                     | List posts with pagination and sorting |
+| GET    | /api/v1/posts/:id                 | Get a single post                      |
+| POST   | /api/v1/posts                     | Create a new post                      |
+| PUT    | /api/v1/posts/:id                 | Update a post                          |
+| PATCH  | /api/v1/posts/:id                 | Partially update a post                |
+| DELETE | /api/v1/posts/:id                 | Delete a post                          |
+| POST   | /api/v1/posts/:postId/tags/:tagId | Attach a tag to a post                 |
+| DELETE | /api/v1/posts/:postId/tags/:tagId | Detach a tag from a post               |
+
+### Comments
+
+| Method | Endpoint                       | Description                       |
+| ------ | ------------------------------ | --------------------------------- |
+| GET    | /api/v1/posts/:postId/comments | List comments for a specific post |
+| GET    | /api/v1/comments/:id           | Get a single comment              |
+| POST   | /api/v1/posts/:postId/comments | Create a comment for a post       |
+| PUT    | /api/v1/comments/:id           | Update a comment                  |
+| DELETE | /api/v1/comments/:id           | Delete a comment                  |
+
+### Tags
+
+| Method | Endpoint         | Description      |
+| ------ | ---------------- | ---------------- |
+| GET    | /api/v1/tags     | List tags        |
+| GET    | /api/v1/tags/:id | Get a single tag |
+| POST   | /api/v1/tags     | Create a tag     |
+| DELETE | /api/v1/tags/:id | Delete a tag     |
+
+## 8. Validation
+
+Validation is configured globally in the application bootstrap process using a NestJS ValidationPipe.
+
+### What is enabled
+
+- whitelist: true — unknown properties are stripped from incoming payloads
+- transform: true — query parameters and payloads are transformed where possible
+
+### DTO validation rules
+
+The request DTOs use validation decorators such as:
+
+- IsString
+- IsNotEmpty
+- MinLength
+- MaxLength
+- IsInt
+- Min
+- Max
+- IsOptional
+- IsIn
+
+Examples include:
+
+- Post title and content must be strings with sensible length limits
+- Comment content must be a non-empty string
+- Tag name must be a non-empty string
+- Pagination values must be positive integers
+
+### Why response DTOs are not validated
+
+Response DTOs are output contracts rather than incoming request payloads. They define how data is returned to clients, so validation is applied to incoming requests instead of to responses.
+
+## 9. Pagination
+
+Pagination is supported on list endpoints through the shared pagination query DTO.
+
+### Query parameters
+
+- page: the page number to retrieve; default is 1
+- limit: the number of items per page; default is 10
+
+### Validation
+
+- page and limit must be integers
+- both values must be greater than or equal to 1
+- limit is capped at 100
+
+### Example requests
+
+```http
+GET /api/v1/posts?page=2&limit=5
+GET /api/v1/tags?page=1&limit=20
 ```
 
-## Deployment
+## 10. Sorting
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Sorting is implemented for list endpoints.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Posts
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+Posts support both a field selector and an order direction:
+
+- sortBy: createdAt or title
+- order: asc or desc
+
+### Tags and Comments
+
+Tags and comments currently support sorting by createdAt using the order parameter.
+
+### Example requests
+
+```http
+GET /api/v1/posts?sortBy=createdAt&order=desc
+GET /api/v1/posts?sortBy=title&order=asc
+GET /api/v1/posts/123/comments?order=asc
+GET /api/v1/tags?order=desc
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 11. Error Handling
 
-## Resources
+The application uses a global exception filter located in the common filters folder.
 
-Check out a few resources that may come in handy when working with NestJS:
+### Behavior
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Catch-all exception handling is applied globally.
+- Errors are logged with the HTTP method, URL, and stack trace when available.
+- The response is returned as a JSON object containing:
+    - statusCode
+    - message
+    - timestamp
+    - path
 
-## Support
+This ensures that unexpected errors are reported consistently across the API.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 12. Database Seeding
 
-## Stay in touch
+The database seeding layer is set up with MikroORM factories and a seeder.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Current seed behavior
 
-## License
+- PostFactory generates fake post titles and content.
+- CommentFactory generates fake comment content.
+- The main seed script creates 50 posts and assigns a random number of comments to each post.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Commands
+
+After configuring your PostgreSQL connection variables, the typical workflow is:
+
+```bash
+npx mikro-orm migration:up
+npx mikro-orm seeder:run
+```
+
+These commands run the migrations and populate the database with seed data.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- PostgreSQL
+
+### Installation
+
+```bash
+npm install
+```
+
+```bash
+npm run start:dev
+```
+
+The API will be available at:
+
+- http://localhost:3000
+- Swagger UI: http://localhost:3000/api
