@@ -26,17 +26,31 @@ export class PostService {
         const limit = query.limit ?? 10;
         const offset = (page - 1) * limit;
 
-        const posts = await this.em.find(
-            Post,
-            {},
-            {
-                limit,
-                offset,
-                orderBy: {
-                    [query.sortBy]: query.order,
-                },
+        /** If there is a search query, filter posts by title or content. */
+        const where = query.search
+            ? {
+                  $or: [
+                      {
+                          title: {
+                              $ilike: `%${query.search}%`,
+                          },
+                      },
+                      {
+                          content: {
+                              $ilike: `%${query.search}%`,
+                          },
+                      },
+                  ],
+              }
+            : {};
+
+        const posts = await this.em.find(Post, where, {
+            limit,
+            offset,
+            orderBy: {
+                [query.sortBy]: query.order,
             },
-        );
+        });
 
         return this.mapper.mapArray(posts, Post, PostSummaryDto);
     }
