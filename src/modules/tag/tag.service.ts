@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { CreateTagDto } from './dtos/requests/create-tag.dto';
 import { TagQueryDto } from './dtos/requests/tag-query.dto';
 import { TagDetailsDto } from './dtos/responses/tag-details.dto';
@@ -20,7 +21,9 @@ export class TagService {
         return this.mapper.map(tag, Tag, TagDetailsDto);
     }
 
-    async findAll(query: TagQueryDto): Promise<TagDetailsDto[]> {
+    async findAll(
+        query: TagQueryDto,
+    ): Promise<PaginatedResponseDto<TagDetailsDto>> {
         const page = query.page ?? 1;
         const limit = query.limit ?? 10;
         const offset = (page - 1) * limit;
@@ -37,7 +40,18 @@ export class TagService {
             },
         );
 
-        return this.mapper.mapArray(tags, Tag, TagDetailsDto);
+        const total = await this.em.count(Tag, {});
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data: this.mapper.mapArray(tags, Tag, TagDetailsDto),
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages,
+            },
+        };
     }
 
     async create(dto: CreateTagDto): Promise<TagDetailsDto> {

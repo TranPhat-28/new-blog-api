@@ -9,6 +9,7 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
@@ -39,7 +40,7 @@ export class CommentController {
     async findByPostId(
         @Param('postId') postId: string,
         @Query() query: CommentQueryDto,
-    ): Promise<CommentDetailsDto[]> {
+    ): Promise<PaginatedResponseDto<CommentDetailsDto>> {
         return this.commentService.findByPostId(postId, query);
     }
 

@@ -12,6 +12,7 @@ import { TagService } from './tag.service';
 import { TagDetailsDto } from './dtos/responses/tag-details.dto';
 import { CreateTagDto } from './dtos/requests/create-tag.dto';
 import { TagQueryDto } from './dtos/requests/tag-query.dto';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 
 @ApiTags('Tag')
 @Controller('api/v1')
@@ -39,7 +40,9 @@ export class TagController {
         required: false,
         type: String,
     })
-    async findAll(@Query() query: TagQueryDto): Promise<TagDetailsDto[]> {
+    async findAll(
+        @Query() query: TagQueryDto,
+    ): Promise<PaginatedResponseDto<TagDetailsDto>> {
         return await this.tagService.findAll(query);
     }
 

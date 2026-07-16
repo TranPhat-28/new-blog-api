@@ -2,6 +2,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { Post } from '../post/post.entity';
 import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
@@ -33,7 +34,7 @@ export class CommentService {
     async findByPostId(
         postId: string,
         query: CommentQueryDto,
-    ): Promise<CommentDetailsDto[]> {
+    ): Promise<PaginatedResponseDto<CommentDetailsDto>> {
         const page = query.page ?? 1;
         const limit = query.limit ?? 10;
         const offset = (page - 1) * limit;
@@ -50,7 +51,18 @@ export class CommentService {
             },
         );
 
-        return this.mapper.mapArray(comments, Comment, CommentDetailsDto);
+        const total = await this.em.count(Comment, { post: postId });
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data: this.mapper.mapArray(comments, Comment, CommentDetailsDto),
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages,
+            },
+        };
     }
 
     async findById(id: string): Promise<CommentDetailsDto> {
