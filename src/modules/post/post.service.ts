@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, FilterQuery } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 import { Comment } from '../comment/comment.entity';
 import { CommentDetailsDto } from '../comment/dtos/responses/comment-details.dto';
@@ -27,22 +27,29 @@ export class PostService {
         const offset = (page - 1) * limit;
 
         /** If there is a search query, filter posts by title or content. */
-        const where = query.search
-            ? {
-                  $or: [
-                      {
-                          title: {
-                              $ilike: `%${query.search}%`,
-                          },
-                      },
-                      {
-                          content: {
-                              $ilike: `%${query.search}%`,
-                          },
-                      },
-                  ],
-              }
-            : {};
+        /** If there is a tagId query, filter posts by tagId. */
+        const where: FilterQuery<Post> = {};
+
+        if (query.search) {
+            where.$or = [
+                {
+                    title: {
+                        $ilike: `%${query.search}%`,
+                    },
+                },
+                {
+                    content: {
+                        $ilike: `%${query.search}%`,
+                    },
+                },
+            ];
+        }
+
+        if (query.tagId) {
+            where.tags = {
+                id: query.tagId,
+            };
+        }
 
         const posts = await this.em.find(Post, where, {
             limit,

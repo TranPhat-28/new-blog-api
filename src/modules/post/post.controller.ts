@@ -49,6 +49,11 @@ export class PostController {
         required: false,
         type: String,
     })
+    @ApiQuery({
+        name: 'tagId',
+        required: false,
+        type: String,
+    })
     async findAll(@Query() query: PostQueryDto): Promise<PostSummaryDto[]> {
         const posts = await this.postService.findAll(query);
         return posts;
