@@ -17,6 +17,7 @@ import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { PostService } from './post.service';
 import { PostQueryDto } from './dtos/requests/post-query.dto';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -54,7 +55,9 @@ export class PostController {
         required: false,
         type: String,
     })
-    async findAll(@Query() query: PostQueryDto): Promise<PostSummaryDto[]> {
+    async findAll(
+        @Query() query: PostQueryDto,
+    ): Promise<PaginatedResponseDto<PostSummaryDto>> {
         const posts = await this.postService.findAll(query);
         return posts;
     }

@@ -13,6 +13,7 @@ import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { Post } from './post.entity';
 import { PostQueryDto } from './dtos/requests/post-query.dto';
+import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 
 @Injectable()
 export class PostService {
@@ -21,7 +22,9 @@ export class PostService {
         @InjectMapper() private readonly mapper: Mapper,
     ) {}
 
-    async findAll(query: PostQueryDto): Promise<PostSummaryDto[]> {
+    async findAll(
+        query: PostQueryDto,
+    ): Promise<PaginatedResponseDto<PostSummaryDto>> {
         const page = query.page ?? 1;
         const limit = query.limit ?? 10;
         const offset = (page - 1) * limit;
@@ -59,7 +62,18 @@ export class PostService {
             },
         });
 
-        return this.mapper.mapArray(posts, Post, PostSummaryDto);
+        const total = await this.em.count(Post, where);
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data: this.mapper.mapArray(posts, Post, PostSummaryDto),
+            meta: {
+                page,
+                limit,
+                total,
+                totalPages,
+            },
+        };
     }
 
     /* Find post by ID and include comments and tags */
