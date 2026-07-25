@@ -1,5 +1,9 @@
 import { EntityManager } from '@mikro-orm/core';
-import { Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { createHash, randomInt } from 'crypto';
 import { Otp } from './otp.entity';
 import { OtpPurpose } from './enums/otp-purpose.enum';
@@ -49,6 +53,37 @@ export class OtpService {
                 code,
                 expiresAt,
             };
+        });
+    }
+
+    async verifyOtp(
+        email: string,
+        code: string,
+        purpose: OtpPurpose,
+    ): Promise<void> {
+        await this.em.transactional(async (em) => {
+            const otp = await em.findOne(Otp, {
+                email,
+                purpose,
+            });
+
+            if (!otp) {
+                throw new NotFoundException('OTP not found.');
+            }
+
+            if (otp.expiresAt < new Date()) {
+                await em.remove(otp).flush();
+
+                throw new BadRequestException('OTP has expired.');
+            }
+
+            const codeHash = this.hashOtp(code);
+
+            if (otp.codeHash !== codeHash) {
+                throw new BadRequestException('Invalid OTP.');
+            }
+
+            await em.remove(otp).flush();
         });
     }
 }
