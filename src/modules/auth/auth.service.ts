@@ -3,7 +3,7 @@ import { OtpPurpose } from '../otp/enums/otp-purpose.enum';
 import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { RequestCodeDto } from './dtos/requests/request-code.dto';
-// import { VerifyCodeDto } from './dtos/requests/verify-code.dto';
+import { VerifyCodeDto } from './dtos/requests/verify-code.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,20 +22,25 @@ export class AuthService {
         return otp;
     }
 
-    // async verifyCode(dto: VerifyCodeDto) {
-    //     let user = await this.userService.findByEmail(dto.email);
+    async verifyCode(dto: VerifyCodeDto) {
+        const user = await this.userService.findByEmail(dto.email);
 
-    //     const purpose = user ? OtpPurpose.LOGIN : OtpPurpose.REGISTER;
+        const purpose = user ? OtpPurpose.LOGIN : OtpPurpose.REGISTER;
 
-    //     await this.otpService.verifyOtp(dto.email, dto.code, purpose);
+        await this.otpService.verifyOtp(dto.email, dto.otp, purpose);
 
-    //     if (!user) {
-    //         user = await this.userService.create({
-    //             email: dto.email,
-    //         });
-    //     }
+        if (!user) {
+            const createUserDto = {
+                email: dto.email,
+                displayName: dto.email.split('@')[0],
+            };
 
-    //     // TODO: Issue JWT
-    //     return user;
-    // }
+            await this.userService.create(createUserDto);
+        }
+
+        return {
+            email: dto.email,
+            jwt: 'JWT_TOKEN',
+        };
+    }
 }
