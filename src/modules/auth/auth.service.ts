@@ -4,12 +4,15 @@ import { OtpService } from '../otp/otp.service';
 import { UserService } from '../user/user.service';
 import { RequestCodeDto } from './dtos/requests/request-code.dto';
 import { VerifyCodeDto } from './dtos/requests/verify-code.dto';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './types/jwt-payload.type';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly otpService: OtpService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async requestCode(dto: RequestCodeDto) {
@@ -23,7 +26,7 @@ export class AuthService {
     }
 
     async verifyCode(dto: VerifyCodeDto) {
-        const user = await this.userService.findByEmail(dto.email);
+        let user = await this.userService.findByEmail(dto.email);
 
         const purpose = user ? OtpPurpose.LOGIN : OtpPurpose.REGISTER;
 
@@ -35,12 +38,23 @@ export class AuthService {
                 displayName: dto.email.split('@')[0],
             };
 
-            await this.userService.create(createUserDto);
+            user = await this.userService.create(createUserDto);
         }
 
+        const token = await this.generateJwt(user.email, user.id);
+
         return {
-            email: dto.email,
-            jwt: 'JWT_TOKEN',
+            email: user.email,
+            jwt: token,
         };
+    }
+
+    async generateJwt(email: string, id: string): Promise<string> {
+        const payload: JwtPayload = {
+            sub: id,
+            email: email,
+        };
+
+        return await this.jwtService.signAsync(payload);
     }
 }
