@@ -11,5 +11,5 @@ export class VerifyCodeDto {
     @IsString()
     @IsNotEmpty()
     @Length(6, 6)
-    otp!: string;
+    code!: string;
 }

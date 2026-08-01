@@ -6,6 +6,7 @@ import { RequestCodeDto } from './dtos/requests/request-code.dto';
 import { VerifyCodeDto } from './dtos/requests/verify-code.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './types/jwt-payload.type';
+import { AuthResponseDto } from './dtos/responses/auth-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
 
         const purpose = user ? OtpPurpose.LOGIN : OtpPurpose.REGISTER;
 
-        await this.otpService.verifyOtp(dto.email, dto.otp, purpose);
+        await this.otpService.verifyOtp(dto.email, dto.code, purpose);
 
         if (!user) {
             const createUserDto = {
@@ -43,10 +44,12 @@ export class AuthService {
 
         const token = await this.generateJwt(user.email, user.id);
 
-        return {
+        const result: AuthResponseDto = {
             email: user.email,
-            jwt: token,
+            accessToken: token,
         };
+
+        return result;
     }
 
     async generateJwt(email: string, id: string): Promise<string> {
