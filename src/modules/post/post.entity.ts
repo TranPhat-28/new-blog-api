@@ -5,11 +5,13 @@ import {
     OneToMany,
     Collection,
     ManyToMany,
+    ManyToOne,
 } from '@mikro-orm/core';
 import { Comment } from '../comment/comment.entity';
 
 import { AutoMap } from '@automapper/classes';
 import { Tag } from '../tag/tag.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Post {
@@ -41,4 +43,7 @@ export class Post {
         owner: true,
     })
     tags = new Collection<Tag>(this);
+
+    @ManyToOne(() => User)
+    author!: User;
 }

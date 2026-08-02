@@ -1,5 +1,13 @@
 import { AutoMap } from '@automapper/classes';
-import { Entity, PrimaryKey, Property, Unique } from '@mikro-orm/core';
+import {
+    Collection,
+    Entity,
+    OneToMany,
+    PrimaryKey,
+    Property,
+    Unique,
+} from '@mikro-orm/core';
+import { Post } from '../post/post.entity';
 
 @Entity()
 export class User {
@@ -23,4 +31,7 @@ export class User {
     @AutoMap()
     @Property({ onUpdate: () => new Date() })
     updatedAt: Date = new Date();
+
+    @OneToMany(() => Post, (post) => post.author)
+    posts = new Collection<Post>(this);
 }
