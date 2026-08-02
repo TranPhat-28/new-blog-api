@@ -3,21 +3,19 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
 import * as fs from 'fs';
 import { join } from 'path';
-import * as dotenv from 'dotenv';
 import { SeedManager } from '@mikro-orm/seeder';
-
-dotenv.config();
+import { env } from './src/config/env';
 
 export default defineConfig({
     extensions: [Migrator, SeedManager],
     driver: PostgreSqlDriver,
-    dbName: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    host: process.env.POSTGRES_HOST,
-    port: Number(process.env.POSTGRES_PORT),
+    dbName: env.postgres.database,
+    user: env.postgres.user,
+    password: env.postgres.password,
+    host: env.postgres.host,
+    port: env.postgres.port,
 
-    debug: process.env.NODE_ENV !== 'production',
+    debug: env.app.nodeEnv !== 'production',
 
     entities: ['dist/**/*.entity.js'],
     entitiesTs: ['src/**/*.entity.ts'],
@@ -29,7 +27,7 @@ export default defineConfig({
 
     driverOptions: {
         connection: {
-            ssl: process.env.DB_SSL_CA
+            ssl: env.postgres.cert
                 ? {
                       rejectUnauthorized: true,
                       ca: (() => {
@@ -37,13 +35,13 @@ export default defineConfig({
                           const localPath = join(
                               process.cwd(),
                               'certs',
-                              process.env.DB_SSL_CA,
+                              env.postgres.cert,
                           );
 
                           // Staging on Render
                           const stagingPath = join(
                               '/etc/secrets',
-                              process.env.DB_SSL_CA,
+                              env.postgres.cert,
                           );
 
                           const certPath = fs.existsSync(localPath)

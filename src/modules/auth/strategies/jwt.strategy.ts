@@ -6,14 +6,15 @@ import {
     type StrategyOptionsWithoutRequest,
 } from 'passport-jwt';
 import { JwtPayload } from '../types/jwt-payload.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    constructor(configService: ConfigService) {
         const options: StrategyOptionsWithoutRequest = {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: 'super-secret-key',
+            secretOrKey: configService.getOrThrow<string>('jwt.secret'),
         };
 
         super(options);

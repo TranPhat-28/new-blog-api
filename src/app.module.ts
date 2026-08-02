@@ -10,6 +10,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import mikroOrmConfig from '../mikro-orm.config';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import configuration from './config/configuration';
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { classes } from '@automapper/classes';
             strategyInitializer: classes(),
         }),
         MikroOrmModule.forRoot(mikroOrmConfig),
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
         PostModule,
         CommentModule,
         TagModule,

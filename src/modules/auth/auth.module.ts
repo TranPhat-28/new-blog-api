@@ -3,19 +3,23 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { OtpModule } from '../otp/otp.module';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { ConfigService } from '@nestjs/config';
+import { StringValue } from 'ms';
 
 @Module({
     imports: [
         UserModule,
         OtpModule,
-        JwtModule.register({
-            // secret: process.env.APP_JWT_SECRET || 'default-secret',
-            secret: 'super-secret-key',
-            signOptions: {
-                expiresIn: '15m',
-            },
+        JwtModule.registerAsync({
+            inject: [ConfigService],
+            useFactory: (config: ConfigService): JwtModuleOptions => ({
+                secret: config.getOrThrow<string>('jwt.secret'),
+                signOptions: {
+                    expiresIn: config.getOrThrow<StringValue>('jwt.expiresIn'),
+                },
+            }),
         }),
     ],
     controllers: [AuthController],
