@@ -8,8 +8,9 @@ import {
     Patch,
     Put,
     Query,
+    UseGuards,
 } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/requests/create-post.dto';
 import { PatchPostDto } from './dtos/requests/patch-post.dto';
 import { UpdatePostDto } from './dtos/requests/update-post.dto';
@@ -18,6 +19,9 @@ import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { PostService } from './post.service';
 import { PostQueryDto } from './dtos/requests/post-query.dto';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtPayload } from '../auth/types/jwt-payload.type';
 
 @ApiTags('Post')
 @Controller('api/v1/posts')
@@ -69,8 +73,13 @@ export class PostController {
     }
 
     @HttpPost()
-    async create(@Body() dto: CreatePostDto): Promise<PostSummaryDto> {
-        return await this.postService.create(dto);
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
+    async create(
+        @Body() dto: CreatePostDto,
+        @CurrentUser() user: JwtPayload,
+    ): Promise<PostSummaryDto> {
+        return await this.postService.create(dto, user.sub);
     }
 
     @Put(':id')

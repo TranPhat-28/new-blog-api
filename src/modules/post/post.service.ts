@@ -14,6 +14,7 @@ import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { Post } from './post.entity';
 import { PostQueryDto } from './dtos/requests/post-query.dto';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class PostService {
@@ -103,8 +104,17 @@ export class PostService {
         return result;
     }
 
-    async create(dto: CreatePostDto): Promise<PostSummaryDto> {
+    async create(
+        dto: CreatePostDto,
+        authorId: string,
+    ): Promise<PostSummaryDto> {
         const post = this.mapper.map(dto, CreatePostDto, Post);
+
+        const author = await this.em.findOneOrFail(User, {
+            id: authorId,
+        });
+
+        post.author = author;
 
         await this.em.persist(post).flush();
 
