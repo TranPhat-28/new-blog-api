@@ -12,6 +12,9 @@ export class PostDetailsDto {
     @AutoMap()
     content!: string;
 
+    @AutoMap()
+    author!: string;
+
     @AutoMap(() => [CommentDetailsDto])
     comments: CommentDetailsDto[] = [];
 

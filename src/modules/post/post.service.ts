@@ -56,6 +56,7 @@ export class PostService {
         }
 
         const posts = await this.em.find(Post, where, {
+            populate: ['author'],
             limit,
             offset,
             orderBy: {
@@ -82,7 +83,7 @@ export class PostService {
         const post = await this.em.findOneOrFail(
             Post,
             { id },
-            { populate: ['comments', 'tags'] },
+            { populate: ['comments', 'tags', 'author'] },
         );
 
         const result = this.mapper.map(post, Post, PostDetailsDto);
@@ -122,7 +123,11 @@ export class PostService {
     }
 
     async update(id: string, dto: UpdatePostDto): Promise<PostSummaryDto> {
-        const post = await this.em.findOneOrFail(Post, { id });
+        const post = await this.em.findOneOrFail(
+            Post,
+            { id },
+            { populate: ['author'] },
+        );
 
         post.title = dto.title;
         post.content = dto.content;
@@ -139,7 +144,11 @@ export class PostService {
     }
 
     async patch(id: string, dto: PatchPostDto): Promise<PostSummaryDto> {
-        const post = await this.em.findOneOrFail(Post, { id });
+        const post = await this.em.findOneOrFail(
+            Post,
+            { id },
+            { populate: ['author'] },
+        );
 
         if (dto.title !== undefined) {
             post.title = dto.title;

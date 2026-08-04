@@ -11,6 +11,9 @@ export class PostSummaryDto {
     content!: string;
 
     @AutoMap()
+    author!: string;
+
+    @AutoMap()
     createdAt: Date = new Date();
 
     @AutoMap()

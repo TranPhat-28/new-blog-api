@@ -23,9 +23,21 @@ export class PostProfile extends AutomapperProfile {
                     (d) => d.comments,
                     mapFrom((s) => s.comments.getItems()),
                 ),
+                forMember(
+                    (d) => d.author,
+                    mapFrom((s) => s.author.displayName),
+                ),
             );
 
-            createMap(mapper, Post, PostSummaryDto);
+            createMap(
+                mapper,
+                Post,
+                PostSummaryDto,
+                forMember(
+                    (d) => d.author,
+                    mapFrom((s) => s.author.displayName),
+                ),
+            );
 
             /* Request DTOs to Entity */
             createMap(mapper, CreatePostDto, Post);
