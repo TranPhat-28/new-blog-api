@@ -29,6 +29,8 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Get()
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     @ApiQuery({
         name: 'page',
         required: false,
@@ -68,6 +70,8 @@ export class PostController {
 
     /* Find post by ID and include comments */
     @Get(':id')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async findById(@Param('id') id: string): Promise<PostDetailsDto> {
         return await this.postService.findById(id);
     }
