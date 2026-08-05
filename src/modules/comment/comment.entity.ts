@@ -2,6 +2,7 @@ import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { Post } from '../post/post.entity';
 
 import { AutoMap } from '@automapper/classes';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Comment {
@@ -25,4 +26,7 @@ export class Comment {
     @AutoMap()
     @Property({ onUpdate: () => new Date() })
     updatedAt: Date = new Date();
+
+    @ManyToOne(() => User)
+    author!: User;
 }

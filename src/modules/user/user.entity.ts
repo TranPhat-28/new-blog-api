@@ -8,6 +8,7 @@ import {
     Unique,
 } from '@mikro-orm/core';
 import { Post } from '../post/post.entity';
+import { Comment } from '../comment/comment.entity';
 
 @Entity()
 export class User {
@@ -34,4 +35,7 @@ export class User {
 
     @OneToMany(() => Post, (post) => post.author)
     posts = new Collection<Post>(this);
+
+    @OneToMany(() => Comment, (comment) => comment.author)
+    comments = new Collection<Comment>(this);
 }

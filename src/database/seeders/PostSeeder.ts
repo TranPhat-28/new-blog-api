@@ -37,6 +37,7 @@ export class DatabaseSeeder extends Seeder {
             const comments = new CommentFactory(em).make(commentCount);
 
             comments.forEach((comment) => {
+                comment.author = faker.helpers.arrayElement(authors);
                 comment.post = post;
             });
         }
