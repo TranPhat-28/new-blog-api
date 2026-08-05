@@ -48,6 +48,7 @@ export class CommentService {
             Comment,
             { post: postId },
             {
+                populate: ['author'],
                 limit,
                 offset,
                 orderBy: {
@@ -71,7 +72,11 @@ export class CommentService {
     }
 
     async findById(id: string): Promise<CommentDetailsDto> {
-        const comment = await this.em.findOneOrFail(Comment, { id });
+        const comment = await this.em.findOneOrFail(
+            Comment,
+            { id },
+            { populate: ['author'] },
+        );
 
         return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
@@ -80,7 +85,11 @@ export class CommentService {
         id: string,
         dto: UpdateCommentDto,
     ): Promise<CommentDetailsDto> {
-        const comment = await this.em.findOneOrFail(Comment, { id });
+        const comment = await this.em.findOneOrFail(
+            Comment,
+            { id },
+            { populate: ['author'] },
+        );
 
         comment.content = dto.content;
 

@@ -83,7 +83,7 @@ export class PostService {
         const post = await this.em.findOneOrFail(
             Post,
             { id },
-            { populate: ['comments', 'tags', 'author'] },
+            { populate: ['comments', 'comments.author', 'tags', 'author'] },
         );
 
         const result = this.mapper.map(post, Post, PostDetailsDto);

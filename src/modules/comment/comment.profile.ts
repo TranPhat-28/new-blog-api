@@ -1,4 +1,4 @@
-import { createMap, Mapper } from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
@@ -14,7 +14,15 @@ export class CommentProfile extends AutomapperProfile {
     override get profile() {
         return (mapper: Mapper) => {
             /* Entity to Response DTOs */
-            createMap(mapper, Comment, CommentDetailsDto);
+            createMap(
+                mapper,
+                Comment,
+                CommentDetailsDto,
+                forMember(
+                    (d) => d.author,
+                    mapFrom((s) => s.author.displayName),
+                ),
+            );
 
             /* Request DTOs to Entity */
             createMap(mapper, CreateCommentDto, Comment);

@@ -12,4 +12,7 @@ export class CommentDetailsDto {
 
     @AutoMap()
     updatedAt?: Date;
+
+    @AutoMap()
+    author!: string;
 }

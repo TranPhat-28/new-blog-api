@@ -5,6 +5,8 @@ import { CreatePostDto } from './dtos/requests/create-post.dto';
 import { PostDetailsDto } from './dtos/responses/post-details.dto';
 import { PostSummaryDto } from './dtos/responses/post-summary.dto';
 import { Post } from './post.entity';
+import { CommentDetailsDto } from '../comment/dtos/responses/comment-details.dto';
+import { Comment } from '../comment/comment.entity';
 
 @Injectable()
 export class PostProfile extends AutomapperProfile {
@@ -21,7 +23,13 @@ export class PostProfile extends AutomapperProfile {
                 PostDetailsDto,
                 forMember(
                     (d) => d.comments,
-                    mapFrom((s) => s.comments.getItems()),
+                    mapFrom((s) =>
+                        s.comments
+                            .getItems()
+                            .map((comment) =>
+                                mapper.map(comment, Comment, CommentDetailsDto),
+                            ),
+                    ),
                 ),
                 forMember(
                     (d) => d.author,
