@@ -87,41 +87,58 @@ export class PostController {
     }
 
     @Put(':id')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async update(
         @Param('id') id: string,
         @Body() dto: UpdatePostDto,
+        @CurrentUser() user: JwtPayload,
     ): Promise<PostSummaryDto> {
-        return await this.postService.update(id, dto);
+        return await this.postService.update(id, dto, user.sub);
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: string): Promise<void> {
-        return this.postService.delete(id);
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
+    async delete(
+        @Param('id') id: string,
+        @CurrentUser() user: JwtPayload,
+    ): Promise<void> {
+        return this.postService.delete(id, user.sub);
     }
 
     @Patch(':id')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async patch(
         @Param('id') id: string,
         @Body() dto: PatchPostDto,
+        @CurrentUser() user: JwtPayload,
     ): Promise<PostSummaryDto> {
-        return await this.postService.patch(id, dto);
+        return await this.postService.patch(id, dto, user.sub);
     }
 
     // Attach a tag to a post
     @HttpPost(':postId/tags/:tagId')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async attachTag(
         @Param('postId') postId: string,
         @Param('tagId') tagId: string,
+        @CurrentUser() user: JwtPayload,
     ): Promise<PostDetailsDto> {
-        return await this.postService.attachTag(postId, tagId);
+        return await this.postService.attachTag(postId, tagId, user.sub);
     }
 
     // Remove a tag from a post
     @Delete(':postId/tags/:tagId')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async detachTag(
         @Param('postId') postId: string,
         @Param('tagId') tagId: string,
+        @CurrentUser() user: JwtPayload,
     ): Promise<PostDetailsDto> {
-        return await this.postService.detachTag(postId, tagId);
+        return await this.postService.detachTag(postId, tagId, user.sub);
     }
 }

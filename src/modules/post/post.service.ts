@@ -1,7 +1,7 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { EntityManager, FilterQuery } from '@mikro-orm/core';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Comment } from '../comment/comment.entity';
 import { CommentDetailsDto } from '../comment/dtos/responses/comment-details.dto';
 import { TagSummaryDto } from '../tag/dtos/responses/tag-summary.dto';
@@ -122,12 +122,18 @@ export class PostService {
         return this.mapper.map(post, Post, PostSummaryDto);
     }
 
-    async update(id: string, dto: UpdatePostDto): Promise<PostSummaryDto> {
+    async update(
+        id: string,
+        dto: UpdatePostDto,
+        currentUserId?: string,
+    ): Promise<PostSummaryDto> {
         const post = await this.em.findOneOrFail(
             Post,
             { id },
             { populate: ['author'] },
         );
+
+        this.ensureAuthor(post, currentUserId);
 
         post.title = dto.title;
         post.content = dto.content;
@@ -137,18 +143,30 @@ export class PostService {
         return this.mapper.map(post, Post, PostSummaryDto);
     }
 
-    async delete(id: string): Promise<void> {
-        const post = await this.em.findOneOrFail(Post, { id });
-
-        await this.em.remove(post).flush();
-    }
-
-    async patch(id: string, dto: PatchPostDto): Promise<PostSummaryDto> {
+    async delete(id: string, currentUserId?: string): Promise<void> {
         const post = await this.em.findOneOrFail(
             Post,
             { id },
             { populate: ['author'] },
         );
+
+        this.ensureAuthor(post, currentUserId);
+
+        await this.em.remove(post).flush();
+    }
+
+    async patch(
+        id: string,
+        dto: PatchPostDto,
+        currentUserId?: string,
+    ): Promise<PostSummaryDto> {
+        const post = await this.em.findOneOrFail(
+            Post,
+            { id },
+            { populate: ['author'] },
+        );
+
+        this.ensureAuthor(post, currentUserId);
 
         if (dto.title !== undefined) {
             post.title = dto.title;
@@ -162,12 +180,26 @@ export class PostService {
         return this.mapper.map(post, Post, PostSummaryDto);
     }
 
-    async attachTag(postId: string, tagId: string): Promise<PostDetailsDto> {
+    private ensureAuthor(post: Post, currentUserId?: string): void {
+        if (!currentUserId || post.author?.id !== currentUserId) {
+            throw new ForbiddenException(
+                'Only the author can perform this action.',
+            );
+        }
+    }
+
+    async attachTag(
+        postId: string,
+        tagId: string,
+        currentUserId?: string,
+    ): Promise<PostDetailsDto> {
         const post = await this.em.findOneOrFail(
             Post,
             { id: postId },
-            { populate: ['tags'] },
+            { populate: ['tags', 'author'] },
         );
+
+        this.ensureAuthor(post, currentUserId);
 
         const tag = await this.em.findOneOrFail(Tag, { id: tagId });
 
@@ -181,12 +213,18 @@ export class PostService {
         return await this.findById(postId);
     }
 
-    async detachTag(postId: string, tagId: string): Promise<PostDetailsDto> {
+    async detachTag(
+        postId: string,
+        tagId: string,
+        currentUserId?: string,
+    ): Promise<PostDetailsDto> {
         const post = await this.em.findOneOrFail(
             Post,
             { id: postId },
-            { populate: ['tags'] },
+            { populate: ['tags', 'author'] },
         );
+
+        this.ensureAuthor(post, currentUserId);
 
         const tag = await this.em.findOneOrFail(Tag, { id: tagId });
 
