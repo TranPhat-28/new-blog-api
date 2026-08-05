@@ -26,6 +26,8 @@ export class CommentController {
     constructor(private readonly commentService: CommentService) {}
 
     @Get('posts/:postId/comments')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     @ApiQuery({
         name: 'page',
         required: false,
@@ -49,6 +51,8 @@ export class CommentController {
     }
 
     @Get('comments/:id')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async findById(@Param('id') id: string): Promise<CommentDetailsDto> {
         return await this.commentService.findById(id);
     }
