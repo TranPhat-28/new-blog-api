@@ -7,14 +7,18 @@ import {
     Post,
     Put,
     Query,
+    UseGuards,
 } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { CommentService } from './comment.service';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { UpdateCommentDto } from './dtos/requests/update-comment.dto';
 import { CommentQueryDto } from './dtos/requests/comment-query.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtPayload } from '../auth/types/jwt-payload.type';
 
 @ApiTags('Comment')
 @Controller('api/v1')
@@ -50,11 +54,14 @@ export class CommentController {
     }
 
     @Post('posts/:postId/comments')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async create(
         @Param('postId') postId: string,
         @Body() dto: CreateCommentDto,
+        @CurrentUser() user: JwtPayload,
     ): Promise<CommentDetailsDto> {
-        return await this.commentService.create(postId, dto);
+        return await this.commentService.create(postId, dto, user.sub);
     }
 
     @Put('comments/:id')

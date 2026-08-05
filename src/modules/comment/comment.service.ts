@@ -4,6 +4,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { Post } from '../post/post.entity';
+import { User } from '../user/user.entity';
 import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dtos/requests/create-comment.dto';
 import { CommentDetailsDto } from './dtos/responses/comment-details.dto';
@@ -20,11 +21,15 @@ export class CommentService {
     async create(
         postId: string,
         dto: CreateCommentDto,
+        authorId?: string,
     ): Promise<CommentDetailsDto> {
         const comment = this.mapper.map(dto, CreateCommentDto, Comment);
 
         const post = await this.em.findOneOrFail(Post, { id: postId });
+        const author = await this.em.findOneOrFail(User, { id: authorId });
+
         comment.post = post;
+        comment.author = author;
 
         await this.em.persist(comment).flush();
 
