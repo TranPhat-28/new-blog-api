@@ -1,7 +1,7 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { EntityManager } from '@mikro-orm/core';
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PaginatedResponseDto } from 'src/common/dtos/paginated-response.dto';
 import { Post } from '../post/post.entity';
 import { User } from '../user/user.entity';
@@ -84,12 +84,15 @@ export class CommentService {
     async update(
         id: string,
         dto: UpdateCommentDto,
+        currentUserId?: string,
     ): Promise<CommentDetailsDto> {
         const comment = await this.em.findOneOrFail(
             Comment,
             { id },
             { populate: ['author'] },
         );
+
+        this.ensureAuthor(comment, currentUserId);
 
         comment.content = dto.content;
 
@@ -98,9 +101,23 @@ export class CommentService {
         return this.mapper.map(comment, Comment, CommentDetailsDto);
     }
 
-    async delete(id: string): Promise<void> {
-        const comment = await this.em.findOneOrFail(Comment, { id });
+    async delete(id: string, currentUserId?: string): Promise<void> {
+        const comment = await this.em.findOneOrFail(
+            Comment,
+            { id },
+            { populate: ['author'] },
+        );
+
+        this.ensureAuthor(comment, currentUserId);
 
         await this.em.remove(comment).flush();
+    }
+
+    private ensureAuthor(comment: Comment, currentUserId?: string): void {
+        if (!currentUserId || comment.author?.id !== currentUserId) {
+            throw new ForbiddenException(
+                'Only the author can perform this action.',
+            );
+        }
     }
 }

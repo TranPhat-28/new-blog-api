@@ -69,15 +69,23 @@ export class CommentController {
     }
 
     @Put('comments/:id')
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
     async update(
         @Param('id') id: string,
         @Body() dto: UpdateCommentDto,
+        @CurrentUser() user: JwtPayload,
     ): Promise<CommentDetailsDto> {
-        return await this.commentService.update(id, dto);
+        return await this.commentService.update(id, dto, user.sub);
     }
 
     @Delete('comments/:id')
-    async delete(@Param('id') id: string): Promise<void> {
-        return this.commentService.delete(id);
+    @ApiBearerAuth('JWT-auth')
+    @UseGuards(JwtAuthGuard)
+    async delete(
+        @Param('id') id: string,
+        @CurrentUser() user: JwtPayload,
+    ): Promise<void> {
+        return this.commentService.delete(id, user.sub);
     }
 }
