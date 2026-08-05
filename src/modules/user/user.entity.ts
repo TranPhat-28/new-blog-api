@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+    Cascade,
     Collection,
     Entity,
     OneToMany,
@@ -33,7 +34,9 @@ export class User {
     @Property({ onUpdate: () => new Date() })
     updatedAt: Date = new Date();
 
-    @OneToMany(() => Post, (post) => post.author)
+    @OneToMany(() => Post, (post) => post.author, {
+        cascade: [Cascade.REMOVE],
+    })
     posts = new Collection<Post>(this);
 
     @OneToMany(() => Comment, (comment) => comment.author)

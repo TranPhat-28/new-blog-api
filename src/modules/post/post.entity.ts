@@ -44,6 +44,8 @@ export class Post {
     })
     tags = new Collection<Tag>(this);
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {
+        deleteRule: 'cascade',
+    })
     author!: User;
 }

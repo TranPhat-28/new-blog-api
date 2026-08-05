@@ -27,6 +27,8 @@ export class Comment {
     @Property({ onUpdate: () => new Date() })
     updatedAt: Date = new Date();
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {
+        deleteRule: 'cascade',
+    })
     author!: User;
 }
