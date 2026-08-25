@@ -36,9 +36,7 @@ The API uses PostgreSQL with three main content entities plus a `User` entity fo
 - Tag
 - User
 
-
 <img width="1482" height="820" alt="Schema" src="https://github.com/user-attachments/assets/370121eb-b44f-4787-99a2-322797c70d8c" />
-
 
 ### Relationships
 
@@ -93,9 +91,7 @@ Swagger documentation is available at:
 
 - http://localhost:3000/api
 
-
 <img width="985" height="3058" alt="Swagger" src="https://github.com/user-attachments/assets/11a6552b-652d-4400-83c1-1ed69de9bcaa" />
-
 
 ### Auth
 
