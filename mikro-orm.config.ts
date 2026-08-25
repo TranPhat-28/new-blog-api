@@ -1,8 +1,6 @@
 import { defineConfig } from '@mikro-orm/postgresql';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Migrator } from '@mikro-orm/migrations';
-import * as fs from 'fs';
-import { join } from 'path';
 import { SeedManager } from '@mikro-orm/seeder';
 import { loadEnvironmentForMikroORMConfig } from 'src/config/configuration';
 
@@ -32,15 +30,7 @@ export default defineConfig({
             ssl: process.env.DB_SSL_CA
                 ? {
                       rejectUnauthorized: true,
-                      ca: fs
-                          .readFileSync(
-                              join(
-                                  process.cwd(),
-                                  'certs',
-                                  process.env.DB_SSL_CA,
-                              ),
-                          )
-                          .toString(),
+                      ca: process.env.DB_SSL_CA,
                   }
                 : undefined,
         },
