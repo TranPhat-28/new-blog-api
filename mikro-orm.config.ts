@@ -4,18 +4,20 @@ import { Migrator } from '@mikro-orm/migrations';
 import * as fs from 'fs';
 import { join } from 'path';
 import { SeedManager } from '@mikro-orm/seeder';
-import { env } from './src/config/env';
+import { loadEnvironmentForMikroORMConfig } from 'src/config/configuration';
+
+loadEnvironmentForMikroORMConfig();
 
 export default defineConfig({
     extensions: [Migrator, SeedManager],
     driver: PostgreSqlDriver,
-    dbName: env.postgres.database,
-    user: env.postgres.user,
-    password: env.postgres.password,
-    host: env.postgres.host,
-    port: env.postgres.port,
+    dbName: process.env.POSTGRES_DB,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT!),
 
-    debug: env.app.nodeEnv !== 'production',
+    debug: process.env.NODE_ENV !== 'production',
 
     entities: ['dist/**/*.entity.js'],
     entitiesTs: ['src/**/*.entity.ts'],
@@ -27,29 +29,18 @@ export default defineConfig({
 
     driverOptions: {
         connection: {
-            ssl: env.postgres.cert
+            ssl: process.env.DB_SSL_CA
                 ? {
                       rejectUnauthorized: true,
-                      ca: (() => {
-                          // Local development
-                          const localPath = join(
-                              process.cwd(),
-                              'certs',
-                              env.postgres.cert,
-                          );
-
-                          // Staging on Render
-                          const stagingPath = join(
-                              '/etc/secrets',
-                              env.postgres.cert,
-                          );
-
-                          const certPath = fs.existsSync(localPath)
-                              ? localPath
-                              : stagingPath;
-
-                          return fs.readFileSync(certPath).toString();
-                      })(),
+                      ca: fs
+                          .readFileSync(
+                              join(
+                                  process.cwd(),
+                                  'certs',
+                                  process.env.DB_SSL_CA,
+                              ),
+                          )
+                          .toString(),
                   }
                 : undefined,
         },

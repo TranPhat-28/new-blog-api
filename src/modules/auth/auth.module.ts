@@ -15,9 +15,10 @@ import { StringValue } from 'ms';
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService): JwtModuleOptions => ({
-                secret: config.getOrThrow<string>('jwt.secret'),
+                secret: config.getOrThrow<string>('APP_JWT_SECRET'),
                 signOptions: {
-                    expiresIn: config.getOrThrow<StringValue>('jwt.expiresIn'),
+                    expiresIn:
+                        config.getOrThrow<StringValue>('APP_JWT_EXPIRES_IN'),
                 },
             }),
         }),
