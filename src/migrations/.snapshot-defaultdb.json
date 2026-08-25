@@ -1,507 +1,468 @@
 {
-  "namespaces": [
-    "public"
-  ],
-  "name": "public",
-  "tables": [
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "code_hash": {
-          "name": "code_hash",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "purpose": {
-          "name": "purpose",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "otp",
-      "schema": "public",
-      "indexes": [
+    "namespaces": ["public"],
+    "name": "public",
+    "tables": [
         {
-          "keyName": "otp_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "tag",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "name"
-          ],
-          "composite": false,
-          "keyName": "tag_name_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "mappedType": "uuid"
+                },
+                "email": {
+                    "name": "email",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "code_hash": {
+                    "name": "code_hash",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "purpose": {
+                    "name": "purpose",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "expires_at": {
+                    "name": "expires_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                }
+            },
+            "name": "otp",
+            "schema": "public",
+            "indexes": [
+                {
+                    "keyName": "otp_pkey",
+                    "columnNames": ["id"],
+                    "composite": false,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {},
+            "nativeEnums": {}
         },
         {
-          "keyName": "tag_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "display_name": {
-          "name": "display_name",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        }
-      },
-      "name": "user",
-      "schema": "public",
-      "indexes": [
-        {
-          "columnNames": [
-            "email"
-          ],
-          "composite": false,
-          "keyName": "user_email_unique",
-          "constraint": true,
-          "primary": false,
-          "unique": true
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "mappedType": "uuid"
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                }
+            },
+            "name": "tag",
+            "schema": "public",
+            "indexes": [
+                {
+                    "columnNames": ["name"],
+                    "composite": false,
+                    "keyName": "tag_name_unique",
+                    "constraint": true,
+                    "primary": false,
+                    "unique": true
+                },
+                {
+                    "keyName": "tag_pkey",
+                    "columnNames": ["id"],
+                    "composite": false,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {},
+            "nativeEnums": {}
         },
         {
-          "keyName": "user_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {},
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "mappedType": "uuid"
+                },
+                "email": {
+                    "name": "email",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "display_name": {
+                    "name": "display_name",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                }
+            },
+            "name": "user",
+            "schema": "public",
+            "indexes": [
+                {
+                    "columnNames": ["email"],
+                    "composite": false,
+                    "keyName": "user_email_unique",
+                    "constraint": true,
+                    "primary": false,
+                    "unique": true
+                },
+                {
+                    "keyName": "user_pkey",
+                    "columnNames": ["id"],
+                    "composite": false,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {},
+            "nativeEnums": {}
         },
-        "title": {
-          "name": "title",
-          "type": "varchar(255)",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 255,
-          "mappedType": "string"
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "author_id": {
-          "name": "author_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "post",
-      "schema": "public",
-      "indexes": [
         {
-          "keyName": "post_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "post_author_id_foreign": {
-          "constraintName": "post_author_id_foreign",
-          "columnNames": [
-            "author_id"
-          ],
-          "localTableName": "public.post",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "post_id": {
-          "name": "post_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "mappedType": "uuid"
+                },
+                "title": {
+                    "name": "title",
+                    "type": "varchar(255)",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 255,
+                    "mappedType": "string"
+                },
+                "content": {
+                    "name": "content",
+                    "type": "text",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "text"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "author_id": {
+                    "name": "author_id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "uuid"
+                }
+            },
+            "name": "post",
+            "schema": "public",
+            "indexes": [
+                {
+                    "keyName": "post_pkey",
+                    "columnNames": ["id"],
+                    "composite": false,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {
+                "post_author_id_foreign": {
+                    "constraintName": "post_author_id_foreign",
+                    "columnNames": ["author_id"],
+                    "localTableName": "public.post",
+                    "referencedColumnNames": ["id"],
+                    "referencedTableName": "public.user",
+                    "deleteRule": "cascade",
+                    "updateRule": "cascade"
+                }
+            },
+            "nativeEnums": {}
         },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "post_tags",
-      "schema": "public",
-      "indexes": [
         {
-          "keyName": "post_tags_pkey",
-          "columnNames": [
-            "post_id",
-            "tag_id"
-          ],
-          "composite": true,
-          "constraint": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "post_tags_post_id_foreign": {
-          "constraintName": "post_tags_post_id_foreign",
-          "columnNames": [
-            "post_id"
-          ],
-          "localTableName": "public.post_tags",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.post",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
+            "columns": {
+                "post_id": {
+                    "name": "post_id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "uuid"
+                },
+                "tag_id": {
+                    "name": "tag_id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "uuid"
+                }
+            },
+            "name": "post_tags",
+            "schema": "public",
+            "indexes": [
+                {
+                    "keyName": "post_tags_pkey",
+                    "columnNames": ["post_id", "tag_id"],
+                    "composite": true,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {
+                "post_tags_post_id_foreign": {
+                    "constraintName": "post_tags_post_id_foreign",
+                    "columnNames": ["post_id"],
+                    "localTableName": "public.post_tags",
+                    "referencedColumnNames": ["id"],
+                    "referencedTableName": "public.post",
+                    "deleteRule": "cascade",
+                    "updateRule": "cascade"
+                },
+                "post_tags_tag_id_foreign": {
+                    "constraintName": "post_tags_tag_id_foreign",
+                    "columnNames": ["tag_id"],
+                    "localTableName": "public.post_tags",
+                    "referencedColumnNames": ["id"],
+                    "referencedTableName": "public.tag",
+                    "deleteRule": "cascade",
+                    "updateRule": "cascade"
+                }
+            },
+            "nativeEnums": {}
         },
-        "post_tags_tag_id_foreign": {
-          "constraintName": "post_tags_tag_id_foreign",
-          "columnNames": [
-            "tag_id"
-          ],
-          "localTableName": "public.post_tags",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.tag",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "default": "gen_random_uuid()",
-          "mappedType": "uuid"
-        },
-        "content": {
-          "name": "content",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
-        "post_id": {
-          "name": "post_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamptz",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "length": 6,
-          "mappedType": "datetime"
-        },
-        "author_id": {
-          "name": "author_id",
-          "type": "uuid",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "uuid"
-        }
-      },
-      "name": "comment",
-      "schema": "public",
-      "indexes": [
         {
-          "keyName": "comment_pkey",
-          "columnNames": [
-            "id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "primary": true,
-          "unique": true
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "default": "gen_random_uuid()",
+                    "mappedType": "uuid"
+                },
+                "content": {
+                    "name": "content",
+                    "type": "text",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "text"
+                },
+                "post_id": {
+                    "name": "post_id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "uuid"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "updated_at": {
+                    "name": "updated_at",
+                    "type": "timestamptz",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "length": 6,
+                    "mappedType": "datetime"
+                },
+                "author_id": {
+                    "name": "author_id",
+                    "type": "uuid",
+                    "unsigned": false,
+                    "autoincrement": false,
+                    "primary": false,
+                    "nullable": false,
+                    "mappedType": "uuid"
+                }
+            },
+            "name": "comment",
+            "schema": "public",
+            "indexes": [
+                {
+                    "keyName": "comment_pkey",
+                    "columnNames": ["id"],
+                    "composite": false,
+                    "constraint": true,
+                    "primary": true,
+                    "unique": true
+                }
+            ],
+            "checks": [],
+            "foreignKeys": {
+                "comment_post_id_foreign": {
+                    "constraintName": "comment_post_id_foreign",
+                    "columnNames": ["post_id"],
+                    "localTableName": "public.comment",
+                    "referencedColumnNames": ["id"],
+                    "referencedTableName": "public.post",
+                    "deleteRule": "cascade",
+                    "updateRule": "cascade"
+                },
+                "comment_author_id_foreign": {
+                    "constraintName": "comment_author_id_foreign",
+                    "columnNames": ["author_id"],
+                    "localTableName": "public.comment",
+                    "referencedColumnNames": ["id"],
+                    "referencedTableName": "public.user",
+                    "deleteRule": "cascade",
+                    "updateRule": "cascade"
+                }
+            },
+            "nativeEnums": {}
         }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "comment_post_id_foreign": {
-          "constraintName": "comment_post_id_foreign",
-          "columnNames": [
-            "post_id"
-          ],
-          "localTableName": "public.comment",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.post",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "comment_author_id_foreign": {
-          "constraintName": "comment_author_id_foreign",
-          "columnNames": [
-            "author_id"
-          ],
-          "localTableName": "public.comment",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.user",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    }
-  ],
-  "nativeEnums": {}
+    ],
+    "nativeEnums": {}
 }
