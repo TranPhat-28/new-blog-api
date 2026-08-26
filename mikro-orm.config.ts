@@ -27,12 +27,16 @@ export default defineConfig({
 
     driverOptions: {
         connection: {
-            ssl: process.env.DB_SSL_CA
-                ? {
-                      rejectUnauthorized: true,
-                      ca: process.env.DB_SSL_CA,
-                  }
-                : undefined,
+            ssl: {
+                /** TODO: Use SSL certificate for database connection.
+                 * Example:
+                 * {
+                 *    rejectUnauthorized: true,
+                 *    ca: process.env.DB_SSL_CA,
+                 * }
+                 */
+                rejectUnauthorized: false,
+            },
         },
     },
 

@@ -9,7 +9,6 @@ export const loadEnvironmentForMikroORMConfig = () => {
         'POSTGRES_USER',
         'POSTGRES_PASSWORD',
         'POSTGRES_DB',
-        'DB_SSL_CA',
         'APP_JWT_SECRET',
         'APP_JWT_EXPIRES_IN',
     ];
