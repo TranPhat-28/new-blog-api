@@ -6,6 +6,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { OtpModule } from './modules/otp/otp.module';
+import { MessagingModule } from './modules/messaging/messaging.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import mikroOrmConfig from '../mikro-orm.config';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -24,6 +25,7 @@ import { classes } from '@automapper/classes';
         UserModule,
         AuthModule,
         OtpModule,
+        MessagingModule,
     ],
 })
 export class AppModule {}

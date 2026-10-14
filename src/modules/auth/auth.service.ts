@@ -7,6 +7,7 @@ import { VerifyCodeDto } from './dtos/requests/verify-code.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './types/jwt-payload.type';
 import { AuthResponseDto } from './dtos/responses/auth-response.dto';
+import { MessagingService } from '../messaging/messaging.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
         private readonly userService: UserService,
         private readonly otpService: OtpService,
         private readonly jwtService: JwtService,
+        private readonly messagingService: MessagingService,
     ) {}
 
     async requestCode(dto: RequestCodeDto) {
@@ -30,6 +32,7 @@ export class AuthService {
         let user = await this.userService.findByEmail(dto.email);
 
         const purpose = user ? OtpPurpose.LOGIN : OtpPurpose.REGISTER;
+        const isLogin = purpose === OtpPurpose.LOGIN;
 
         await this.otpService.verifyOtp(dto.email, dto.code, purpose);
 
@@ -48,6 +51,15 @@ export class AuthService {
             email: user.email,
             accessToken: token,
         };
+
+        if (isLogin) {
+            await this.messagingService.sendLoginNotification({
+                eventType: 'USER_LOGIN',
+                userId: user.id,
+                email: user.email,
+                occurredAt: new Date().toISOString(),
+            });
+        }
 
         return result;
     }

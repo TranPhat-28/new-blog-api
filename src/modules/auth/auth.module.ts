@@ -7,11 +7,13 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { StringValue } from 'ms';
+import { MessagingModule } from '../messaging/messaging.module';
 
 @Module({
     imports: [
         UserModule,
         OtpModule,
+        MessagingModule,
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: (config: ConfigService): JwtModuleOptions => ({
