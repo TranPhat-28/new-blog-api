@@ -2,88 +2,45 @@
 
 ## 1. Project Overview
 
-A RESTful blog API built with NestJS, MikroORM, and PostgreSQL.
+A RESTful blog API built with NestJS, MikroORM, PostgreSQL and deployed using AWS.
 
-This project provides a simple blog platform API with three main resources:
+|                                                                                                                                                                       | Technology        | Description                                     |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------- |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nestjs/nestjs-original.svg" alt="NestJS" height="28">                                             | NestJS            | Framework for building the REST API.            |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="TypeScript" height="28">                                 | TypeScript        | Typed language used for the application.        |
+| <img src="https://mikro-orm.io/img/favicon.ico" alt="MikroORM" height="28">                                                                                           | MikroORM          | ORM for entities, repositories, and migrations. |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" height="28">                                 | PostgreSQL        | Relational database.                            |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg" alt="Swagger" height="28">                                          | Swagger / OpenAPI | API documentation and exploration.              |
+| <img src="https://cdn.simpleicons.org/jsonwebtokens/bdbdbd" alt="JSON Web Tokens" height="28">                                                                        | JWT               | Token standard used for authentication.         |
+| <img src="https://cdn.simpleicons.org/faker/FF5858" alt="Faker" height="28">                                                                                          | Faker             | Generates realistic seed data.                  |
+| <img src="https://cdn.simpleicons.org/dotenv/ECD53F" alt="dotenv" height="28">                                                                                        | dotenv            | Loads configuration from environment variables. |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="Amazon Web Services" height="28"> | AWS               | Cloud platform for the project demo.            |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jest/jest-plain.svg" alt="Jest" height="28">                                                      | Jest              | Test runner and HTTP testing tools.             |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eslint/eslint-original.svg" alt="ESLint" height="28">                                             | ESLint / Prettier | Code linting and formatting.                    |
 
-- Posts
-- Comments
-- Tags
-
-## 2. Tech Stack
-
-| Technology        | Purpose                                                         |
-| ----------------- | --------------------------------------------------------------- |
-| NestJS            | Main application framework for building the REST API            |
-| TypeScript        | Strongly typed application code                                 |
-| MikroORM          | ORM for entities, repositories, migrations, and database access |
-| PostgreSQL        | Primary relational database                                     |
-| Swagger / OpenAPI | API documentation and interactive exploration                   |
-| class-validator   | Request DTO validation                                          |
-| class-transformer | Query parameter and payload transformation                      |
-| AutoMapper        | Mapping between entities and DTOs                               |
-| Faker             | Generating realistic fake data for seeding                      |
-| dotenv            | Loading environment variables                                   |
-| Jest / Supertest  | Testing support                                                 |
-| ESLint / Prettier | Code quality and formatting                                     |
-
-## 3. Database Design
-
-The API uses PostgreSQL with three main content entities plus a `User` entity for authentication and authorship:
-
-- Post
-- Comment
-- Tag
-- User
-
-<img width="1482" height="820" alt="Schema" src="https://github.com/user-attachments/assets/370121eb-b44f-4787-99a2-322797c70d8c" />
-
-### Relationships
-
-- Post ↔ Comment: One-to-many
-    - One post can have many comments.
-    - Each comment belongs to a single post.
-    - Each comment also has an author.
-    - The comment side is the owning side of the relation through the post reference.
-
-- Post ↔ Tag: Many-to-many
-    - A post can have many tags.
-    - A tag can be assigned to many posts.
-    - The owning side of the relation is defined on the Post entity through the tags collection.
-
-- Post ↔ User: Many-to-one
-    - Each post has an author.
-    - Only the post author can update, delete, or manage tags on their post.
-
-### Entity notes
-
-- Post entities contain title, content, timestamps, comments, tags, and an author reference.
-- Comment entities contain content, a reference to their parent post, an author reference, and timestamps.
-- Tag entities contain a unique name and timestamps.
-- User entities handle authentication and are referenced as authors on posts and comments.
-
-## 4. Implemented Features
+## 2. Implemented Features
 
 The repository currently implements the following features:
 
-- Email-based OTP authentication with JWT issuance
-- Authenticated user retrieval via `/api/v1/me`
-- CRUD operations for Posts with author-only update/delete and tag attachment/removal
-- CRUD operations for Comments with authenticated creation and author-only update/delete
-- CRUD operations for Tags
-- Author relationships between Posts, Comments, and Users
-- One-to-many relationship between Posts and Comments
-- Many-to-many relationship between Posts and Tags
-- Database migrations
-- Database seeders and factories
-- AutoMapper integration for entity/DTO mapping
-- Separate request and response DTOs
-- Validation using class-validator
-- Global ValidationPipe
-- Global exception filter
-- Pagination support
-- Sorting support
+- Fully implemented CRUD operations, including:
+    - Paginated result
+    - Sorting and filtering
+    - Text search
+    - Authorization-required operations
+- User authentication using JWT
+- Database seedings and migrations management
+- Fully implemented entities and DTOs mapping
+- Request validation handling and exception filter
 - Swagger/OpenAPI documentation
+- Email notification service
+
+## 3. Database Design
+
+<img width="1482" height="820" alt="Schema" src="https://github.com/user-attachments/assets/370121eb-b44f-4787-99a2-322797c70d8c" />
+
+## 4. Infrastructure
+
+<img width="1536" height="1024" alt="Diagram2" src="https://github.com/user-attachments/assets/131fbd5d-5abe-41b5-aaf7-5369c23ab186" />
 
 ## 5. API Endpoints
 
@@ -132,20 +89,3 @@ Swagger documentation is available at:
 | GET    | /api/v1/tags/:id | Get a single tag |
 | POST   | /api/v1/tags     | Create a tag     |
 | DELETE | /api/v1/tags/:id | Delete a tag     |
-
-## Getting Started
-
-### Installation
-
-```bash
-npm install
-```
-
-```bash
-npm run start:dev
-```
-
-The API will be available at:
-
-- http://localhost:3000
-- Swagger UI: http://localhost:3000/api
